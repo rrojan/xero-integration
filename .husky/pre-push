@@ -1,0 +1,3 @@
+# Typecheck & lint the whole codebase before push - saves us from having to catch lint errors in CI
+pnpm typecheck
+pnpm lint
