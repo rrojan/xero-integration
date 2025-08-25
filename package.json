@@ -37,7 +37,7 @@
     "typescript": "^5"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,json,css,yml,yaml}": [
+    "*.{js,jsx,ts,tsx,json,css}": [
       "pnpm format",
       "pnpm lint"
     ]
