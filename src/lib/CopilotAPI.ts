@@ -1,6 +1,6 @@
 import type { CopilotAPI as SDK } from 'copilot-node-sdk'
 import { copilotApi } from 'copilot-node-sdk'
-import { copilotApiKey as apiKey } from '@/config/server.env'
+import { COPILOT_API_KEY } from '@/config/server.env'
 import { withRetry } from '@/lib/withRetry'
 import {
   type ClientRequest,
@@ -33,7 +33,10 @@ export class CopilotAPI {
     private token: string,
     customApiKey?: string,
   ) {
-    this.copilot = copilotApi({ apiKey: customApiKey ?? apiKey, token })
+    this.copilot = copilotApi({
+      apiKey: customApiKey ?? COPILOT_API_KEY,
+      token,
+    })
   }
 
   // NOTE: Any method prefixed with _ is a API method that doesn't implement retry & delay
