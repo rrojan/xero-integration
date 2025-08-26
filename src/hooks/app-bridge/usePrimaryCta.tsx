@@ -1,11 +1,11 @@
-import { DASHBOARD_DOMAIN } from 'client/constants/domains'
+import { useEffect } from 'react'
+import { DASHBOARD_DOMAIN } from '@/constants/domains'
 import type {
   Clickable,
   Configurable,
   PrimaryCtaPayload,
-} from 'client/hooks/app-bridge/types'
-import { ensureHttps } from 'client/utils/https'
-import { useEffect } from 'react'
+} from '@/hooks/app-bridge/types'
+import { ensureHttps } from '@/utils/https'
 
 export const usePrimaryCta = (
   primaryCta: Clickable | null,

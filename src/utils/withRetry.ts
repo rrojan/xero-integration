@@ -1,6 +1,6 @@
 // import * as Sentry from '@sentry/nextjs'
 import pRetry from 'p-retry'
-import type { StatusableError } from 'server/types/copilotErrors'
+import type { StatusableError } from '@/types/copilotErrors'
 
 export const withRetry = async <Args extends unknown[], R>(
   fn: (...args: Args) => Promise<R>,

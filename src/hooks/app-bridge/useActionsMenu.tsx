@@ -1,11 +1,11 @@
-import { DASHBOARD_DOMAIN } from 'client/constants/domains'
+import { useEffect, useMemo } from 'react'
+import { DASHBOARD_DOMAIN } from '@/constants/domains'
 import type {
   ActionsMenuPayload,
   Clickable,
   Configurable,
-} from 'client/hooks/app-bridge/types'
-import { ensureHttps } from 'client/utils/https'
-import { useEffect, useMemo } from 'react'
+} from '@/hooks/app-bridge/types'
+import { ensureHttps } from '@/utils/https'
 
 const getActionMenuItemId = (idx: number) => `header.actionsMenu.${idx}`
 

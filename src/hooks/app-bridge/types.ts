@@ -4,14 +4,8 @@ export enum Icons {
   PLUS = 'Plus',
   TEMPLATES = 'Templates',
   TRASH = 'Trash',
-}
-
-export interface BreadcrumbsPayload {
-  items: {
-    label: string
-    onClick: string
-  }[]
-  type: 'header.breadcrumbs'
+  DOWNLOAD = 'Download',
+  DISCONNECT = 'Disconnect',
 }
 
 export interface PrimaryCtaPayload {
