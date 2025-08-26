@@ -1,4 +1,4 @@
-name: Code quality checks
+name: Code Quality Checks
 
 on: push
 
@@ -24,6 +24,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
+          version: 10.15
           run_install: false
 
       - name: Set up Node.js
@@ -52,6 +53,7 @@ jobs:
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
+          version: 10.15
           run_install: false
 
       - name: Set up Node.js
