@@ -22,7 +22,7 @@ const Configuration: UserConfig = {
         'hotfix', // Hotfixes to main
       ],
     ],
-    'scope-enum': [2, 'always', ['OUT-*']], // Ticket number
+    // Optionally (but preferably) commit the ticket symbol in the git commit msg
   },
 }
 
