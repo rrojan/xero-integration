@@ -1,6 +1,7 @@
 import type { CopilotAPI as SDK } from 'copilot-node-sdk'
 import { copilotApi } from 'copilot-node-sdk'
 import { copilotApiKey as apiKey } from '@/config/server.env'
+import { withRetry } from '@/lib/withRetry'
 import {
   type ClientRequest,
   type ClientResponse,
@@ -24,7 +25,6 @@ import {
   type WorkspaceResponse,
   WorkspaceResponseSchema,
 } from '@/types/copilotApi'
-import { withRetry } from '@/utils/withRetry'
 
 export class CopilotAPI {
   copilot: SDK
