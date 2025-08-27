@@ -1,5 +1,6 @@
 #!/usr/bin/env tsx
 
+import 'dotenv/config'
 import { ZodError } from 'zod'
 
 const validateEnv = async () => {
