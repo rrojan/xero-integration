@@ -38,6 +38,7 @@
     "drizzle-kit": "^0.31.4",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.5",
+    "supabase": "^2.39.2",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
