@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 set -Eeuo pipefail
 
 echo "👷 Running build script for environment: ${VERCEL_ENV:-local}"
