@@ -1,10 +1,11 @@
-import z from 'zod'
+import { z } from 'zod'
 
-export const COPILOT_API_KEY = z
-  .string({ error: 'Please provide a valid COPILOT_API_KEY' })
-  .min(1)
-  .parse(process.env.COPILOT_API_KEY)
+const ServerEnvSchema = z.object({
+  COPILOT_API_KEY: z
+    .string({ error: 'Please provide a valid COPILOT_API_KEY' })
+    .min(1),
+  DATABASE_URL: z.url({ error: 'Please provide a valid DATABASE_URL' }),
+})
 
-export const DATABASE_URL = z
-  .url({ error: 'Please provide a valid DATABASE_URL' })
-  .parse(process.env.DATABASE_URL)
+const env = ServerEnvSchema.parse(process.env)
+export default env

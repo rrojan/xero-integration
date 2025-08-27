@@ -1,6 +1,6 @@
 import type { CopilotAPI as SDK } from 'copilot-node-sdk'
 import { copilotApi } from 'copilot-node-sdk'
-import { COPILOT_API_KEY } from '@/config/server.env'
+import env from '@/config/server.env'
 import { withRetry } from '@/lib/withRetry'
 import {
   type ClientRequest,
@@ -34,7 +34,7 @@ export class CopilotAPI {
     customApiKey?: string,
   ) {
     this.copilot = copilotApi({
-      apiKey: customApiKey ?? COPILOT_API_KEY,
+      apiKey: customApiKey ?? env.COPILOT_API_KEY,
       token,
     })
   }
