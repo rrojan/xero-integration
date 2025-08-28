@@ -1,1 +1,13 @@
-{ "version": "7", "dialect": "postgresql", "entries": [] }
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1756387298946,
+      "tag": "20250828132138_add_xero_connections_table",
+      "breakpoints": false
+    }
+  ]
+}
