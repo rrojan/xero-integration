@@ -20,7 +20,6 @@ export default function ClientErrorBoundary({
                 {decoratedText}
               </a>
             )}
-            )}
           >
             {error.message}.
           </Linkify>
