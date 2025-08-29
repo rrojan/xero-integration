@@ -2,6 +2,9 @@ import { Callout } from '@/components/Callout'
 import { SilentError } from '@/components/templates/SilentError'
 import type { PageProps } from '@/types/componentProps'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 const Home = async ({ searchParams }: PageProps) => {
   const { token } = await searchParams
 
