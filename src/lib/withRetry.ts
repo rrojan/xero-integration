@@ -42,11 +42,7 @@ export const withRetry = async <Args extends unknown[], R>(
       maxTimeout: 2000,
       factor: 2, // Exponential factor for timeout delay. Tweak this if issues still persist
 
-      onFailedAttempt: (error: {
-        error: unknown
-        attemptNumber: number
-        retriesLeft: number
-      }) => {
+      onFailedAttempt: (error: { error: unknown; attemptNumber: number; retriesLeft: number }) => {
         if (
           (error.error as StatusableError).status !== 429 &&
           (error.error as StatusableError).status !== 500

@@ -65,9 +65,7 @@ export class CopilotAPI {
     sendInvite: boolean = false,
   ): Promise<ClientResponse> {
     console.info('CopilotAPI#_createClient', this.token)
-    return ClientResponseSchema.parse(
-      await this.copilot.createClient({ sendInvite, requestBody }),
-    )
+    return ClientResponseSchema.parse(await this.copilot.createClient({ sendInvite, requestBody }))
   }
 
   async _getClient(id: string): Promise<ClientResponse> {
@@ -80,14 +78,9 @@ export class CopilotAPI {
     return ClientsResponseSchema.parse(await this.copilot.listClients(args))
   }
 
-  async _updateClient(
-    id: string,
-    requestBody: ClientRequest,
-  ): Promise<ClientResponse> {
+  async _updateClient(id: string, requestBody: ClientRequest): Promise<ClientResponse> {
     console.info('CopilotAPI#_updateClient', this.token)
-    return ClientResponseSchema.parse(
-      await this.copilot.updateClient({ id, requestBody }),
-    )
+    return ClientResponseSchema.parse(await this.copilot.updateClient({ id, requestBody }))
   }
 
   async _deleteClient(id: string) {
@@ -97,16 +90,12 @@ export class CopilotAPI {
 
   async _createCompany(requestBody: CompanyCreateRequest) {
     console.info('CopilotAPI#_createCompany', this.token)
-    return CompanyResponseSchema.parse(
-      await this.copilot.createCompany({ requestBody }),
-    )
+    return CompanyResponseSchema.parse(await this.copilot.createCompany({ requestBody }))
   }
 
   async _getCompany(id: string): Promise<CompanyResponse> {
     console.info('CopilotAPI#_getCompany', this.token)
-    return CompanyResponseSchema.parse(
-      await this.copilot.retrieveCompany({ id }),
-    )
+    return CompanyResponseSchema.parse(await this.copilot.retrieveCompany({ id }))
   }
 
   async _getCompanies(
@@ -121,20 +110,14 @@ export class CopilotAPI {
     return (await this.getClients({ limit: 10000, companyId })).data || []
   }
 
-  async _getInternalUsers(
-    args: CopilotListArgs = {},
-  ): Promise<InternalUsersResponse> {
+  async _getInternalUsers(args: CopilotListArgs = {}): Promise<InternalUsersResponse> {
     console.info('CopilotAPI#_getInternalUsers', this.token)
-    return InternalUsersResponseSchema.parse(
-      await this.copilot.listInternalUsers(args),
-    )
+    return InternalUsersResponseSchema.parse(await this.copilot.listInternalUsers(args))
   }
 
   async _getInternalUser(id: string): Promise<InternalUser> {
     console.info('CopilotAPI#_getInternalUser', this.token)
-    return InternalUserSchema.parse(
-      await this.copilot.retrieveInternalUser({ id }),
-    )
+    return InternalUserSchema.parse(await this.copilot.retrieveInternalUser({ id }))
   }
 
   async _createNotification(
