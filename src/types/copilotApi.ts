@@ -15,9 +15,7 @@ export type CopilotListArgs = {
 
 // Schema for decrypted Copilot tokens
 export const TokenSchema = z.object({
-  internalUserId: z.string().optional(),
-  clientId: z.string().optional(),
-  companyId: z.string().optional(),
+  internalUserId: z.uuid(),
   workspaceId: z.string(),
 })
 export type Token = z.infer<typeof TokenSchema>
@@ -132,9 +130,7 @@ export const NotificationRequestBodySchema = z.object({
     })
     .optional(),
 })
-export type NotificationRequestBody = z.infer<
-  typeof NotificationRequestBodySchema
->
+export type NotificationRequestBody = z.infer<typeof NotificationRequestBodySchema>
 
 export const NotificationCreatedResponseSchema = z.object({
   id: z.string(),
@@ -150,6 +146,4 @@ export const NotificationCreatedResponseSchema = z.object({
   senderId: z.string().optional(),
   senderType: z.string().optional(),
 })
-export type NotificationCreatedResponse = z.infer<
-  typeof NotificationCreatedResponseSchema
->
+export type NotificationCreatedResponse = z.infer<typeof NotificationCreatedResponseSchema>
