@@ -2,9 +2,10 @@ import Script from 'next/script'
 import { z } from 'zod'
 import { SilentError } from '@/components/templates/SilentError'
 import db from '@/db'
-import { type XeroTokenSet, xeroConnectionsTable } from '@/db/schema/xero_connections.schema'
+import { xeroConnectionsTable } from '@/db/schema/xero_connections.schema'
 import { CopilotAPI } from '@/lib/CopilotAPI'
 import xero from '@/lib/XeroAPI'
+import type { XeroTokenSet } from '@/types/xeroApi'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -22,8 +23,6 @@ const CallbackPage = async ({ searchParams }: CallbackPageProps) => {
     return <SilentError message="No token available" />
   }
 
-  const tokenSet = await xero.handleApiCallback(sp)
-
   const copilot = new CopilotAPI(token)
   const tokenPayload = await copilot.getTokenPayload()
 
@@ -31,7 +30,15 @@ const CallbackPage = async ({ searchParams }: CallbackPageProps) => {
     return <SilentError message="Invalid token payload" />
   }
 
-  // Create xero connection record
+  let tokenSet: XeroTokenSet
+  try {
+    tokenSet = await xero.handleApiCallback(sp)
+  } catch (error) {
+    console.error('Error handling Xero callback:', error)
+    return <SilentError message="Failed to handle Xero callback" />
+  }
+
+  // Upsert xero connection record
   await db
     .insert(xeroConnectionsTable)
     .values({

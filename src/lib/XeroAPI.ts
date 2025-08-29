@@ -27,13 +27,15 @@ class XeroAPI {
   /**
    * Handle API callback from Xero and exchange the authorization code
    */
-  async handleApiCallback(searchParams: { [key: string]: string | string[] | undefined }) {
+  async handleApiCallback(searchParams: {
+    [key: string]: string | string[] | undefined
+  }): ReturnType<XeroClient['apiCallback']> {
     try {
       const url = await getServerUrl('/auth/callback', await searchParams)
       const tokenSet = await this.xero.apiCallback(url)
       return tokenSet
     } catch (error) {
-      console.error('handleApiCallback | Error during API callback:', error)
+      console.error('XeroAPI#handleApiCallback | Error during API callback:', error)
       throw error
     }
   }

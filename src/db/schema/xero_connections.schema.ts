@@ -1,15 +1,6 @@
 import { boolean, json, pgTable, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { timestamps } from '@/db/db.helpers'
-
-export type XeroTokenSet = {
-  id_token: string
-  access_token: string
-  expires_at: number
-  token_type: 'Bearer'
-  refresh_token: string
-  scope: string
-  session_state?: string
-}
+import type { XeroTokenSet } from '@/types/xeroApi'
 
 export const xeroConnectionsTable = pgTable(
   'xero_connections',
