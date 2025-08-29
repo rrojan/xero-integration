@@ -6,6 +6,9 @@ import { type XeroTokenSet, xeroConnectionsTable } from '@/db/schema/xero_connec
 import { CopilotAPI } from '@/lib/CopilotAPI'
 import xero from '@/lib/XeroAPI'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 interface CallbackPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
