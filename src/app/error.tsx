@@ -16,9 +16,10 @@ export default function ClientErrorBoundary({
         <p className="mb-2 [&>a:hover]:underline [&>a]:block">
           <Linkify
             componentDecorator={(decoratedHref, decoratedText, key) => (
-              <a target="blank" href={decoratedHref} key={key}>
+              <a target="_blank" rel="noopener noreferrer" href={decoratedHref} key={key}>
                 {decoratedText}
               </a>
+            )}
             )}
           >
             {error.message}.
