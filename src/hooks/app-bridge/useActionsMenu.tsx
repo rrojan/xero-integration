@@ -1,23 +1,16 @@
 import { useEffect, useMemo } from 'react'
 import { DASHBOARD_DOMAIN } from '@/constants/domains'
-import type {
-  ActionsMenuPayload,
-  Clickable,
-  Configurable,
-} from '@/hooks/app-bridge/types'
+import type { ActionsMenuPayload, Clickable, Configurable } from '@/hooks/app-bridge/types'
 import { ensureHttps } from '@/utils/https'
 
 const getActionMenuItemId = (idx: number) => `header.actionsMenu.${idx}`
 
 export function useActionsMenu(actions: Clickable[], config?: Configurable) {
   const callbackRefs = useMemo(() => {
-    return actions.reduce<Record<string, () => void>>(
-      (acc, { onClick }, idx) => {
-        if (onClick) acc[getActionMenuItemId(idx)] = onClick
-        return acc
-      },
-      {},
-    )
+    return actions.reduce<Record<string, () => void>>((acc, { onClick }, idx) => {
+      if (onClick) acc[getActionMenuItemId(idx)] = onClick
+      return acc
+    }, {})
   }, [actions])
 
   useEffect(() => {
@@ -55,10 +48,7 @@ export function useActionsMenu(actions: Clickable[], config?: Configurable) {
 
   useEffect(() => {
     const handleUnload = () => {
-      window.parent.postMessage(
-        { type: 'header.actionsMenu', items: [] },
-        DASHBOARD_DOMAIN,
-      )
+      window.parent.postMessage({ type: 'header.actionsMenu', items: [] }, DASHBOARD_DOMAIN)
     }
     addEventListener('beforeunload', handleUnload)
     return () => {

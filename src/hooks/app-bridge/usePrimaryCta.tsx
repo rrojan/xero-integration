@@ -1,26 +1,18 @@
 import { useEffect } from 'react'
 import { DASHBOARD_DOMAIN } from '@/constants/domains'
-import type {
-  Clickable,
-  Configurable,
-  PrimaryCtaPayload,
-} from '@/hooks/app-bridge/types'
+import type { Clickable, Configurable, PrimaryCtaPayload } from '@/hooks/app-bridge/types'
 import { ensureHttps } from '@/utils/https'
 
-export const usePrimaryCta = (
-  primaryCta: Clickable | null,
-  config?: Configurable,
-) => {
+export const usePrimaryCta = (primaryCta: Clickable | null, config?: Configurable) => {
   useEffect(() => {
-    const payload: PrimaryCtaPayload | Pick<PrimaryCtaPayload, 'type'> =
-      !primaryCta
-        ? { type: 'header.primaryCta' }
-        : {
-            icon: primaryCta.icon,
-            label: primaryCta.label,
-            onClick: 'header.primaryCta.onClick',
-            type: 'header.primaryCta',
-          }
+    const payload: PrimaryCtaPayload | Pick<PrimaryCtaPayload, 'type'> = !primaryCta
+      ? { type: 'header.primaryCta' }
+      : {
+          icon: primaryCta.icon,
+          label: primaryCta.label,
+          onClick: 'header.primaryCta.onClick',
+          type: 'header.primaryCta',
+        }
 
     window.parent.postMessage(payload, DASHBOARD_DOMAIN)
     if (config?.portalUrl) {
@@ -48,10 +40,7 @@ export const usePrimaryCta = (
     const handleUnload = () => {
       window.parent.postMessage({ type: 'header.primaryCta' }, DASHBOARD_DOMAIN)
       if (config?.portalUrl) {
-        window.parent.postMessage(
-          { type: 'header.primaryCta' },
-          ensureHttps(config.portalUrl),
-        )
+        window.parent.postMessage({ type: 'header.primaryCta' }, ensureHttps(config.portalUrl))
       }
     }
     addEventListener('beforeunload', handleUnload)

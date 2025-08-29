@@ -1,26 +1,18 @@
 import { useEffect } from 'react'
 import { DASHBOARD_DOMAIN } from '@/constants/domains'
-import type {
-  Clickable,
-  Configurable,
-  SecondaryCtaPayload,
-} from '@/hooks/app-bridge/types'
+import type { Clickable, Configurable, SecondaryCtaPayload } from '@/hooks/app-bridge/types'
 import { ensureHttps } from '@/utils/https'
 
-export const useSecondaryCta = (
-  secondaryCta: Clickable | null,
-  config?: Configurable,
-) => {
+export const useSecondaryCta = (secondaryCta: Clickable | null, config?: Configurable) => {
   useEffect(() => {
-    const payload: SecondaryCtaPayload | Pick<SecondaryCtaPayload, 'type'> =
-      !secondaryCta
-        ? { type: 'header.secondaryCta' }
-        : {
-            type: 'header.secondaryCta',
-            label: secondaryCta.label,
-            icon: secondaryCta.icon,
-            onClick: 'header.secondaryCta.onClick',
-          }
+    const payload: SecondaryCtaPayload | Pick<SecondaryCtaPayload, 'type'> = !secondaryCta
+      ? { type: 'header.secondaryCta' }
+      : {
+          type: 'header.secondaryCta',
+          label: secondaryCta.label,
+          icon: secondaryCta.icon,
+          onClick: 'header.secondaryCta.onClick',
+        }
 
     window.parent.postMessage(payload, DASHBOARD_DOMAIN)
     if (config?.portalUrl) {
@@ -46,15 +38,9 @@ export const useSecondaryCta = (
 
   useEffect(() => {
     const handleUnload = () => {
-      window.parent.postMessage(
-        { type: 'header.secondaryCta' },
-        DASHBOARD_DOMAIN,
-      )
+      window.parent.postMessage({ type: 'header.secondaryCta' }, DASHBOARD_DOMAIN)
       if (config?.portalUrl) {
-        window.parent.postMessage(
-          { type: 'header.secondaryCta' },
-          ensureHttps(config.portalUrl),
-        )
+        window.parent.postMessage({ type: 'header.secondaryCta' }, ensureHttps(config.portalUrl))
       }
     }
     addEventListener('beforeunload', handleUnload)
