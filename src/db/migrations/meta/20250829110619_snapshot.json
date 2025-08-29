@@ -1,6 +1,6 @@
 {
-  "id": "26739950-0d38-4806-b64a-e1c38bad0b51",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f61c73eb-5731-4cf1-93eb-ed46bef5bc49",
+  "prevId": "ad891b77-dc6a-4456-843c-62c41d8e9bb4",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -23,7 +23,7 @@
         },
         "token_set": {
           "name": "token_set",
-          "type": "json",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },

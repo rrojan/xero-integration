@@ -1,7 +1,7 @@
 CREATE TABLE "xero_connections" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"portal_id" varchar(16) NOT NULL,
-	"token_set" json,
+	"token_set" jsonb,
 	"status" boolean DEFAULT false NOT NULL,
 	"initiated_by" uuid NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,

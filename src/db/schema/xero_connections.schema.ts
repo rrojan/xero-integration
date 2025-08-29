@@ -1,4 +1,4 @@
-import { boolean, json, pgTable, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
+import { boolean, jsonb, pgTable, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { timestamps } from '@/db/db.helpers'
 import type { XeroTokenSet } from '@/types/xeroApi'
 
@@ -11,7 +11,7 @@ export const xeroConnectionsTable = pgTable(
     portalId: varchar({ length: 16 }).notNull(),
 
     // Xero tokenset returned after a successful OAuth connection
-    tokenSet: json().$type<XeroTokenSet>(),
+    tokenSet: jsonb().$type<XeroTokenSet>(),
 
     // Connection status
     status: boolean().notNull().default(false),
