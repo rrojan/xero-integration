@@ -1,37 +1,61 @@
 import Script from 'next/script'
 import z from 'zod'
+import { SilentError } from '@/components/templates/SilentError'
+import db from '@/db'
+import { type XeroTokenSet, xeroConnectionsTable } from '@/db/schema/xero_connections.schema'
+import { CopilotAPI } from '@/lib/CopilotAPI'
+import xero from '@/lib/XeroAPI'
 
 interface CallbackPageProps {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 const CallbackPage = async ({ searchParams }: CallbackPageProps) => {
-  const searchParamsObj = await searchParams
-  const code = z.string().parse(searchParamsObj.code)
-  // const state = z.string().nullish().parse(searchParamsObj.state)
+  const sp = await searchParams
+  const token = z.string().parse(sp.state)
+  delete sp.state // xero-node sdk doesn't expect state in the url params
 
-  const resp = await fetch('https://identity.xero.com/connect/token', {
-    method: 'POST',
-    headers: {
-      Authorization:
-        'Basic ' +
-        Buffer.from(
-          `${process.env.NEXT_PUBLIC_XERO_CLIENT_ID}:${process.env.XERO_CLIENT_SECRET}`,
-        ).toString('base64'),
-    },
-    body: new URLSearchParams({
-      grant_type: 'authorization_code',
-      code: code || '',
-      redirect_uri:
-        'https://dominant-deadly-narwhal.ngrok-free.app/auth/callback',
-    }),
-  })
-  const data = await resp.json()
-  console.info('Token response:', data)
+  if (!token) {
+    return <SilentError message="No token available" />
+  }
+
+  const tokenSet = await xero.handleApiCallback(sp)
+
+  const copilot = new CopilotAPI(token)
+  const tokenPayload = await copilot.getTokenPayload()
+
+  if (!tokenPayload || !tokenPayload.workspaceId || !tokenPayload.internalUserId) {
+    return <SilentError message="Invalid token payload" />
+  }
+
+  // Create xero connection record
+  await db
+    .insert(xeroConnectionsTable)
+    .values({
+      portalId: z.string().min(1).parse(tokenPayload.workspaceId),
+      tokenSet: tokenSet as XeroTokenSet,
+      status: true,
+      initiatedBy: tokenPayload.internalUserId,
+    })
+    .onConflictDoUpdate({
+      target: xeroConnectionsTable.portalId,
+      set: {
+        tokenSet: tokenSet as XeroTokenSet,
+        status: true,
+        initiatedBy: tokenPayload.internalUserId,
+      },
+    })
+
   return (
-    <div className="py-8 px-4">
+    <div className="py-4 px-2">
       <div>Connecting Xero Integration...</div>
-      <Script defer={true}>{`window.close();`}</Script>
+      <Script id="xero-confirmation-close" strategy="afterInteractive">
+        {`
+          setTimeout(() => {
+            window.close();
+          }, 1000)
+        `}
+      </Script>
     </div>
   )
 }
