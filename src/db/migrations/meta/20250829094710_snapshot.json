@@ -1,5 +1,5 @@
 {
-  "id": "f7c8932a-1e15-44d3-b7d7-6aea4a678161",
+  "id": "1f119724-eeb6-4f84-8e91-cfee4a473e51",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -21,17 +21,11 @@
           "primaryKey": false,
           "notNull": true
         },
-        "access_token": {
-          "name": "access_token",
-          "type": "varchar(2048)",
+        "token_set": {
+          "name": "token_set",
+          "type": "json",
           "primaryKey": false,
-          "notNull": true
-        },
-        "refresh_token": {
-          "name": "refresh_token",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "status": {
           "name": "status",
@@ -43,18 +37,6 @@
         "initiated_by": {
           "name": "initiated_by",
           "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "auth_event_id": {
-          "name": "auth_event_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "tenant_id": {
-          "name": "tenant_id",
-          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -73,7 +55,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "uq_xero_connections_portal_id": {
+          "name": "uq_xero_connections_portal_id",
+          "columns": [
+            {
+              "expression": "portal_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
