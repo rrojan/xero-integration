@@ -1,5 +1,5 @@
 import Script from 'next/script'
-import z from 'zod'
+import { z } from 'zod'
 import { SilentError } from '@/components/templates/SilentError'
 import db from '@/db'
 import { type XeroTokenSet, xeroConnectionsTable } from '@/db/schema/xero_connections.schema'
