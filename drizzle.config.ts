@@ -1,5 +1,5 @@
 import { defineConfig } from 'drizzle-kit'
-import z from 'zod'
+import { z } from 'zod'
 
 export default defineConfig({
   dialect: 'postgresql',
