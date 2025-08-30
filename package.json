@@ -5,12 +5,14 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "build:all": "sh scripts/build/build.sh",
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "biome check",
     "format": "biome format --write",
     "lint-staged": "lint-staged",
-    "prepare": "husky"
+    "prepare": "husky",
+    "tsx": "tsx --tsconfig tsconfig.tsx.json --require dotenv/config --require tsconfig-paths/register"
   },
   "dependencies": {
     "bottleneck": "^2.19.5",
@@ -42,8 +44,10 @@
     "drizzle-kit": "^0.31.4",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.5",
+    "server-only": "^0.0.1",
     "supabase": "^2.39.2",
     "tailwindcss": "^4",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.20.5",
     "typescript": "^5"
   },
