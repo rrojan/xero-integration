@@ -12,8 +12,8 @@
     {
       "idx": 1,
       "version": "7",
-      "when": 1756465579973,
-      "tag": "20250829110619_add_xero_connections_table",
+      "when": 1756526824251,
+      "tag": "20250830040704_add_xero_connections_table",
       "breakpoints": false
     }
   ]
