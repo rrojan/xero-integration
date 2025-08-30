@@ -12,7 +12,7 @@
     "format": "biome format --write",
     "lint-staged": "lint-staged",
     "prepare": "husky",
-    "tsx": "tsx --tsconfig tsconfig.tsx.json --require dotenv/config --require tsconfig-paths/register"
+    "ex": "tsx --tsconfig tsconfig.tsx.json --require dotenv/config --require tsconfig-paths/register"
   },
   "dependencies": {
     "bottleneck": "^2.19.5",
