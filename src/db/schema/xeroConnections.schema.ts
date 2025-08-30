@@ -2,7 +2,7 @@ import { boolean, jsonb, pgTable, uniqueIndex, uuid, varchar } from 'drizzle-orm
 import { timestamps } from '@/db/db.helpers'
 import type { XeroTokenSet } from '@/types/xeroApi'
 
-export const xeroConnectionsTable = pgTable(
+export const xeroConnections = pgTable(
   'xero_connections',
   {
     id: uuid().primaryKey().notNull().defaultRandom(),
