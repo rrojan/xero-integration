@@ -1,10 +1,14 @@
 import 'server-only'
 
+import { eq } from 'drizzle-orm'
 import { XeroClient } from 'xero-node'
 import env from '@/config/server.env'
+import db from '@/db'
+import { xeroConnections } from '@/db/schema/xeroConnections.schema'
+import { CopilotAPI } from '@/lib/CopilotAPI'
 import { getServerUrl } from '@/utils/serverUrl'
 
-class XeroAPI {
+export class XeroAPI {
   private xero: XeroClient
 
   constructor() {
@@ -14,6 +18,48 @@ class XeroAPI {
       redirectUris: [env.XERO_CALLBACK_URL],
       scopes: env.XERO_SCOPES.split(' '),
     })
+  }
+
+  /**
+   * Authorize Xero for a Copilot workspace using a token payload
+   * @param token - Copilot app token
+   */
+  async authorizeXeroForCopilotWorkspace(token: string): Promise<void> {
+    // Get workspace ID from Copilot token
+    const copilot = new CopilotAPI(token)
+    const tokenPayload = await copilot.getTokenPayload()
+    if (!tokenPayload || !tokenPayload.workspaceId) {
+      throw new Error('Invalid Copilot token')
+    }
+
+    // Find corresponding Xero connection for the workspace
+    const connection = (
+      await db.query.xeroConnections.findMany({
+        where: eq(xeroConnections.portalId, tokenPayload.workspaceId),
+      })
+    )?.[0]
+
+    // Xero connection not found or inactive. Send a mail prompting IUs to re-authorize
+    if (!connection || !connection.tokenSet || !connection.tokenSet.refresh_token) {
+      return
+    }
+
+    // If access token is expired, attempt to refresh access token via refresh token
+    const isAccessTokenValid = connection.tokenSet.expires_at
+      ? connection.tokenSet.expires_at * 1000 > Date.now()
+      : false
+    if (!isAccessTokenValid) {
+      const tokenSet = await this.xero.refreshWithRefreshToken(
+        env.XERO_CLIENT_ID,
+        env.XERO_CLIENT_SECRET,
+        connection.tokenSet.refresh_token,
+      )
+      await db
+        .update(xeroConnections)
+        .set({ tokenSet })
+        .where(eq(xeroConnections.id, connection.id))
+      // Refresh token flow was unsuccessful. Send a mail prompting IUs to re-authorize
+    }
   }
 
   /**
