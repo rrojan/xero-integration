@@ -2,7 +2,7 @@ import Script from 'next/script'
 import { z } from 'zod'
 import { SilentError } from '@/components/templates/SilentError'
 import db from '@/db'
-import { xeroConnectionsTable } from '@/db/schema/xero_connections.schema'
+import { xeroConnections } from '@/db/schema/xeroConnections.schema'
 import { CopilotAPI } from '@/lib/CopilotAPI'
 import xero from '@/lib/XeroAPI'
 import type { XeroTokenSet } from '@/types/xeroApi'
@@ -40,7 +40,7 @@ const CallbackPage = async ({ searchParams }: CallbackPageProps) => {
 
   // Upsert xero connection record
   await db
-    .insert(xeroConnectionsTable)
+    .insert(xeroConnections)
     .values({
       portalId: z.string().min(1).parse(tokenPayload.workspaceId),
       tokenSet: tokenSet as XeroTokenSet,
@@ -48,7 +48,7 @@ const CallbackPage = async ({ searchParams }: CallbackPageProps) => {
       initiatedBy: tokenPayload.internalUserId,
     })
     .onConflictDoUpdate({
-      target: xeroConnectionsTable.portalId,
+      target: xeroConnections.portalId,
       set: {
         tokenSet: tokenSet as XeroTokenSet,
         status: true,
