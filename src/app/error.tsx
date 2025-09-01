@@ -10,6 +10,8 @@ export default function ClientErrorBoundary({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  console.error(error)
+
   return (
     <main>
       <div className="flex flex-col justify-center items-center pb-4 pt-52">
