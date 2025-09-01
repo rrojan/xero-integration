@@ -1,9 +1,9 @@
 import Script from 'next/script'
 import { SilentError } from '@/components/layouts/SilentError'
-import User from '@/features/copilot-integration/models/User.model'
-import XeroConnectionsService from '@/features/xero-integration/auth/lib/XeroConnections.service'
-import type { XeroTokenSet } from '@/features/xero-integration/lib/types'
-import XeroAPI from '@/features/xero-integration/lib/XeroAPI'
+import XeroConnectionsService from '@/features/auth/lib/XeroConnections.service'
+import User from '@/lib/copilot/models/User.model'
+import type { XeroTokenSet } from '@/lib/xero/types'
+import XeroAPI from '@/lib/xero/XeroAPI'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import type { PageProps } from '@/app/types'
-import User from '@/features/copilot-integration/models/User.model'
-import XeroAPI from '@/features/xero-integration/lib/XeroAPI'
+import User from '@/lib/copilot/models/User.model'
+import XeroAPI from '@/lib/xero/XeroAPI'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0

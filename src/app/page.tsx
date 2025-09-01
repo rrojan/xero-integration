@@ -1,11 +1,11 @@
 import type { PageProps } from '@/app/types'
 import { AppStateContextProvider } from '@/context/AppContext'
-import { serializeClientUser } from '@/features/copilot-integration/models/ClientUser.model'
-import User from '@/features/copilot-integration/models/User.model'
-import { CalloutSection } from '@/features/xero-integration/auth/components/CalloutSection'
-import { RealtimeXeroConnections } from '@/features/xero-integration/auth/components/RealtimeXeroConnections'
-import { TempSyncStatus } from '@/features/xero-integration/auth/components/TempSyncStatus'
-import XeroConnectionsService from '@/features/xero-integration/auth/lib/XeroConnections.service'
+import { CalloutSection } from '@/features/auth/components/CalloutSection'
+import { RealtimeXeroConnections } from '@/features/auth/components/RealtimeXeroConnections'
+import { TempSyncStatus } from '@/features/auth/components/TempSyncStatus'
+import XeroConnectionsService from '@/features/auth/lib/XeroConnections.service'
+import { serializeClientUser } from '@/lib/copilot/models/ClientUser.model'
+import User from '@/lib/copilot/models/User.model'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0

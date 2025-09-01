@@ -4,7 +4,7 @@ import type {
   ActionsMenuPayload,
   Clickable,
   Configurable,
-} from '@/features/copilot-integration/hooks/app-bridge/types'
+} from '@/lib/copilot/hooks/app-bridge/types'
 import { ensureHttps } from '@/utils/https'
 
 const getActionMenuItemId = (idx: number) => `header.actionsMenu.${idx}`

@@ -2,7 +2,7 @@
 
 import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 import { useEffect, useMemo, useRef } from 'react'
-import getSupabaseClient from '@/features/supabase-integration/SupabaseClient'
+import getSupabaseClient from '@/lib/supabase/SupabaseClient'
 import { generateRandomString } from '@/utils/random'
 
 type RealtimeEvent = 'INSERT' | 'UPDATE' | 'DELETE' | '*'

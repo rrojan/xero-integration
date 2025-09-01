@@ -3,19 +3,19 @@ import { DASHBOARD_DOMAIN } from '@/constants/domains'
 import type {
   Clickable,
   Configurable,
-  SecondaryCtaPayload,
-} from '@/features/copilot-integration/hooks/app-bridge/types'
+  PrimaryCtaPayload,
+} from '@/lib/copilot/hooks/app-bridge/types'
 import { ensureHttps } from '@/utils/https'
 
-export const useSecondaryCta = (secondaryCta: Clickable | null, config?: Configurable) => {
+export const usePrimaryCta = (primaryCta: Clickable | null, config?: Configurable) => {
   useEffect(() => {
-    const payload: SecondaryCtaPayload | Pick<SecondaryCtaPayload, 'type'> = !secondaryCta
-      ? { type: 'header.secondaryCta' }
+    const payload: PrimaryCtaPayload | Pick<PrimaryCtaPayload, 'type'> = !primaryCta
+      ? { type: 'header.primaryCta' }
       : {
-          type: 'header.secondaryCta',
-          label: secondaryCta.label,
-          icon: secondaryCta.icon,
-          onClick: 'header.secondaryCta.onClick',
+          icon: primaryCta.icon,
+          label: primaryCta.label,
+          onClick: 'header.primaryCta.onClick',
+          type: 'header.primaryCta',
         }
 
     window.parent.postMessage(payload, DASHBOARD_DOMAIN)
@@ -25,11 +25,11 @@ export const useSecondaryCta = (secondaryCta: Clickable | null, config?: Configu
 
     const handleMessage = (event: MessageEvent) => {
       if (
-        event.data.type === 'header.secondaryCta.onClick' &&
+        event.data.type === 'header.primaryCta.onClick' &&
         typeof event.data.id === 'string' &&
-        secondaryCta?.onClick
+        primaryCta?.onClick
       ) {
-        secondaryCta.onClick()
+        primaryCta.onClick()
       }
     }
 
@@ -38,13 +38,13 @@ export const useSecondaryCta = (secondaryCta: Clickable | null, config?: Configu
     return () => {
       removeEventListener('message', handleMessage)
     }
-  }, [secondaryCta, config?.portalUrl])
+  }, [primaryCta, config?.portalUrl])
 
   useEffect(() => {
     const handleUnload = () => {
-      window.parent.postMessage({ type: 'header.secondaryCta' }, DASHBOARD_DOMAIN)
+      window.parent.postMessage({ type: 'header.primaryCta' }, DASHBOARD_DOMAIN)
       if (config?.portalUrl) {
-        window.parent.postMessage({ type: 'header.secondaryCta' }, ensureHttps(config.portalUrl))
+        window.parent.postMessage({ type: 'header.primaryCta' }, ensureHttps(config.portalUrl))
       }
     }
     addEventListener('beforeunload', handleUnload)

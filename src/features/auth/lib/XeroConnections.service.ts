@@ -2,10 +2,10 @@ import { eq } from 'drizzle-orm'
 import { z } from 'zod'
 import db from '@/db'
 import { xeroConnections } from '@/db/schema/xeroConnections.schema'
-import type User from '@/features/copilot-integration/models/User.model'
-import { sendAuthorizationFailedNotification } from '@/features/xero-integration/auth/lib/XeroConnections.helpers'
-import type { XeroTokenSet } from '@/features/xero-integration/lib/types'
-import XeroAPI from '@/features/xero-integration/lib/XeroAPI'
+import { sendAuthorizationFailedNotification } from '@/features/auth/lib/XeroConnections.helpers'
+import type User from '@/lib/copilot/models/User.model'
+import type { XeroTokenSet } from '@/lib/xero/types'
+import XeroAPI from '@/lib/xero/XeroAPI'
 
 class XeroConnectionsService {
   constructor(private copilotUser: User) {}

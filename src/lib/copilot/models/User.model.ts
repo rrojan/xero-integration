@@ -1,9 +1,9 @@
 import { z } from 'zod'
-import CopilotConnectionError from '@/features/copilot-integration/errors/CopilotConnectionError'
-import CopilotInvalidTokenError from '@/features/copilot-integration/errors/CopilotInvalidTokenError'
-import CopilotNoTokenError from '@/features/copilot-integration/errors/CopilotNoTokenError'
-import { CopilotAPI } from '@/features/copilot-integration/lib/CopilotAPI'
-import type { Token } from '@/features/copilot-integration/lib/types'
+import CopilotConnectionError from '@/lib/copilot/errors/CopilotConnectionError'
+import CopilotInvalidTokenError from '@/lib/copilot/errors/CopilotInvalidTokenError'
+import CopilotNoTokenError from '@/lib/copilot/errors/CopilotNoTokenError'
+import { CopilotAPI } from '@/lib/copilot/lib/CopilotAPI'
+import type { Token } from '@/lib/copilot/lib/types'
 
 class User {
   internalUserId: string

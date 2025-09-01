@@ -1,7 +1,7 @@
 import { useAppState } from '@/context/AppContext'
 import type { XeroConnection } from '@/db/schema/xeroConnections.schema'
-import type { ClientUser } from '@/features/copilot-integration/models/ClientUser.model'
-import { useRealtime } from '@/features/supabase-integration/hooks/useRealtime'
+import type { ClientUser } from '@/lib/copilot/models/ClientUser.model'
+import { useRealtime } from '@/lib/supabase/hooks/useRealtime'
 
 export const useRealtimeXeroConnections = (user: ClientUser) => {
   const { updateAppState } = useAppState()

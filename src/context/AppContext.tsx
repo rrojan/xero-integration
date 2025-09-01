@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, type ReactNode, useContext, useState } from 'react'
-import type { ClientUser } from '@/features/copilot-integration/models/ClientUser.model'
+import type { ClientUser } from '@/lib/copilot/models/ClientUser.model'
 
 export type AppStateContextType = {
   user: ClientUser

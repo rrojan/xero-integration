@@ -1,7 +1,7 @@
 import type { InferSelectModel } from 'drizzle-orm'
 import { boolean, jsonb, pgTable, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { timestamps } from '@/db/db.helpers'
-import type { XeroTokenSet } from '@/features/xero-integration/lib/types'
+import type { XeroTokenSet } from '@/lib/xero/types'
 
 export const xeroConnections = pgTable(
   'xero_connections',
