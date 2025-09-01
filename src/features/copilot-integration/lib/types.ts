@@ -20,12 +20,6 @@ export const TokenSchema = z.object({
 })
 export type Token = z.infer<typeof TokenSchema>
 
-export const PortalTokenSchema = z.object({
-  internalUserId: z.uuid(),
-  portalId: z.string().min(1),
-})
-export type PortalToken = z.infer<typeof PortalTokenSchema>
-
 // Response schema for `/workspace` endpoint
 export const WorkspaceResponseSchema = z.object({
   id: z.string(),
