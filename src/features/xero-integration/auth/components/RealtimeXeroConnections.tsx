@@ -3,7 +3,11 @@
 import type { ClientUser } from '@/features/copilot-integration/models/ClientUser.model'
 import { useRealtimeXeroConnections } from '@/features/xero-integration/auth/hooks/useRealtimeXeroConnections'
 
-export const RealtimeXeroConnections = ({ user }: { user: ClientUser }) => {
+interface RealtimeXeroConnectionsProps {
+  user: ClientUser
+}
+
+export const RealtimeXeroConnections = ({ user }: RealtimeXeroConnectionsProps) => {
   useRealtimeXeroConnections(user)
   return null
 }
