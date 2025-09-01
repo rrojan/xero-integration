@@ -1,6 +1,7 @@
+import type { InferSelectModel } from 'drizzle-orm'
 import { boolean, jsonb, pgTable, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { timestamps } from '@/db/db.helpers'
-import type { XeroTokenSet } from '@/types/xeroApi'
+import type { XeroTokenSet } from '@/features/xero-integration/lib/types'
 
 export const xeroConnections = pgTable(
   'xero_connections',
@@ -23,3 +24,5 @@ export const xeroConnections = pgTable(
   },
   (table) => [uniqueIndex('uq_xero_connections_portal_id').on(table.portalId)],
 )
+
+export type XeroConnection = InferSelectModel<typeof xeroConnections>
