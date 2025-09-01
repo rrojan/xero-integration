@@ -2,9 +2,15 @@
 
 import { type AppStateContextType, useAppState } from '@/context/AppContext'
 
-export const AppStateSetter = (newState: Partial<AppStateContextType>) => {
-  const { updateAppState } = useAppState()
-  updateAppState(newState)
+'use client'
 
+import { type AppStateContextType, useAppState } from '@/context/AppContext'
+import { useEffect } from 'react'
+
+export function AppStateSetter({ newState }: { newState: Partial<AppStateContextType> }) {
+  const { updateAppState } = useAppState()
+  useEffect(() => {
+    updateAppState(newState)
+  }, [newState, updateAppState])
   return null
 }
