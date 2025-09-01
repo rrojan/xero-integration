@@ -1,19 +1,18 @@
 import { redirect } from 'next/navigation'
-import { SilentError } from '@/components/templates/SilentError'
-import xero from '@/lib/XeroAPI'
-import type { PageProps } from '@/types/componentProps'
+import type { PageProps } from '@/app/types'
+import User from '@/features/copilot-integration/models/User.model'
+import XeroAPI from '@/features/xero-integration/lib/XeroAPI'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 const AuthInitiatePage = async ({ searchParams }: PageProps) => {
-  const { token } = await searchParams
-  if (!token) {
-    return <SilentError message="No token available" />
-  }
-
-  const consentUrl = await xero.buildConsentUrl()
-  redirect(`${consentUrl}&state=${token}`)
+  const sp = await searchParams
+  const user = await User.authenticate(sp.token)
+  const xero = new XeroAPI()
+  const consentUrl = new URL(await xero.buildConsentUrl())
+  consentUrl.searchParams.set('state', user.token)
+  redirect(consentUrl.toString())
 }
 
 export default AuthInitiatePage
