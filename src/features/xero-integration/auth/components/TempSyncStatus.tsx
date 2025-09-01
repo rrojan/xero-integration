@@ -2,6 +2,9 @@
 
 import { useAppState } from '@/context/AppContext'
 
+/**
+ * Temporary client component to show sync status.
+ */
 export const TempSyncStatus = () => {
   const { connectionStatus } = useAppState()
 

@@ -6,6 +6,7 @@ import { useAppState } from '@/context/AppContext'
 export const CalloutSection = () => {
   const { user } = useAppState()
 
+  // TODO: Static for now...
   return (
     <Callout
       title={'Authorize your account'}
