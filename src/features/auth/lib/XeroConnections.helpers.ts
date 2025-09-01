@@ -19,10 +19,10 @@ export const sendAuthorizationFailedNotification = async (user: User, e?: unknow
           body: 'Your Xero integration encountered an error and has stopped syncing. Please reconnect to avoid any disruptions.',
         },
         email: {
-          title: 'Your Xero Sync has stopped working',
-          subject: 'Your Xero Sync has stopped working',
           header: 'Your Xero Sync has stopped working',
+          subject: 'Your Xero Sync has stopped working',
           body: 'Your Xero integration encountered an error and has stopped syncing. Please reconnect to avoid any disruptions.',
+          title: 'Reconnect Xero',
         },
       },
     })
