@@ -8,7 +8,7 @@ import type { Token } from '@/features/copilot-integration/lib/types'
 class User {
   internalUserId: string
   portalId: string
-  copilot?: CopilotAPI
+  copilot: CopilotAPI
 
   constructor(
     public token: string,
@@ -17,7 +17,7 @@ class User {
   ) {
     this.internalUserId = tokenPayload.internalUserId
     this.portalId = tokenPayload.workspaceId
-    this.copilot = copilot
+    this.copilot = copilot || new CopilotAPI(token)
   }
 
   /**
