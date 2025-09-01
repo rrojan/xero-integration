@@ -1,10 +1,6 @@
-import type User from './User.model'
+import type User from '@/lib/copilot/models/User.model'
 
-export type ClientUser = {
-  internalUserId: string
-  portalId: string
-  token: string
-}
+export type ClientUser = Omit<User, 'copilot'>
 
 export const serializeClientUser = (user: User): ClientUser => ({
   internalUserId: user.internalUserId,
