@@ -1,7 +1,29 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // biome-ignore lint/suspicious/useAwait: `headers` needs to be async
+  headers: async () => {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value:
+              "frame-ancestors 'self' https://dashboard.copilot.app https://dashboard.copilot-staging.app https://dashboard.copilot-staging.com;",
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+        ],
+      },
+    ]
+  },
 }
 
 export default nextConfig
