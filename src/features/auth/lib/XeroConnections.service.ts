@@ -8,7 +8,8 @@ import type { XeroTokenSet } from '@/lib/xero/types'
 import XeroAPI from '@/lib/xero/XeroAPI'
 
 class XeroConnectionsService {
-  constructor(private copilotUser: User) {}
+  constructor(private user: User) {}
+
   /**
    * Authorize Xero for a Copilot workspace using a token payload
    * @param token - Copilot app token
@@ -44,7 +45,7 @@ class XeroConnectionsService {
 
   async getConnectionForWorkspace() {
     return await db.query.xeroConnections.findFirst({
-      where: eq(xeroConnections.portalId, this.copilotUser.portalId),
+      where: eq(xeroConnections.portalId, this.user.portalId),
     })
   }
 
@@ -52,17 +53,17 @@ class XeroConnectionsService {
     await db
       .insert(xeroConnections)
       .values({
-        portalId: z.string().min(1).parse(this.copilotUser.portalId),
+        portalId: z.string().min(1).parse(this.user.portalId),
         tokenSet: tokenSet,
         status: true,
-        initiatedBy: this.copilotUser.internalUserId,
+        initiatedBy: this.user.internalUserId,
       })
       .onConflictDoUpdate({
         target: xeroConnections.portalId,
         set: {
           tokenSet: tokenSet,
           status: true,
-          initiatedBy: this.copilotUser.internalUserId,
+          initiatedBy: this.user.internalUserId,
         },
       })
   }
@@ -71,7 +72,7 @@ class XeroConnectionsService {
     await db
       .update(xeroConnections)
       .set({ tokenSet })
-      .where(eq(xeroConnections.portalId, this.copilotUser.portalId))
+      .where(eq(xeroConnections.portalId, this.user.portalId))
   }
 }
 

@@ -6,12 +6,12 @@ import { CopilotAPI } from '@/lib/copilot/lib/CopilotAPI'
 import type { Token } from '@/lib/copilot/lib/types'
 
 class User {
-  internalUserId: string
-  portalId: string
-  copilot: CopilotAPI
+  readonly internalUserId: string
+  readonly portalId: string
+  readonly copilot: CopilotAPI
 
   constructor(
-    public token: string,
+    public readonly token: string,
     tokenPayload: Token,
     copilot?: CopilotAPI,
   ) {
