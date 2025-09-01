@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm'
+// import { after } from 'next/server'
 import { z } from 'zod'
 import db from '@/db'
 import { xeroConnections } from '@/db/schema/xeroConnections.schema'
@@ -20,7 +21,9 @@ class XeroConnectionsService {
 
     // Xero connection not found or inactive. Send a mail prompting IUs to re-authorize
     if (!connection || !connection.tokenSet || !connection.tokenSet.refresh_token) {
-      sendAuthorizationFailedNotification()
+      // after(() => {
+      sendAuthorizationFailedNotification(this.user)
+      // })
       return
     }
 
@@ -29,13 +32,19 @@ class XeroConnectionsService {
       ? connection.tokenSet.expires_at * 1000 > Date.now()
       : false
 
+    if (isAccessTokenValid) {
+      return
+    }
+
     let tokenSet: XeroTokenSet
     if (!isAccessTokenValid) {
       try {
         const xero = new XeroAPI()
         tokenSet = await xero.refreshWithRefreshToken(connection.tokenSet.refresh_token)
       } catch (e: unknown) {
-        sendAuthorizationFailedNotification(e)
+        // after(() => {
+        sendAuthorizationFailedNotification(this.user, e)
+        // })
         return
       }
 

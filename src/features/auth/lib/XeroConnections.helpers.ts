@@ -1,6 +1,40 @@
 import 'server-only'
 
-export const sendAuthorizationFailedNotification = (e?: unknown) => {
-  // TODO: Implement in another ticket
-  console.error('Authorization failed. Sending email notifications to all IUs', e)
+import { copilotBottleneck } from '@/lib/copilot/lib/bottleneck'
+import type User from '@/lib/copilot/models/User.model'
+
+export const sendAuthorizationFailedNotification = async (user: User, e?: unknown) => {
+  const internalUsers = await user.copilot.getInternalUsers()
+
+  const notificationPromises = []
+
+  for (const internalUser of internalUsers.data) {
+    const promise = user.copilot.createNotification({
+      senderId: user.internalUserId,
+      senderType: 'internalUser',
+      recipientInternalUserId: internalUser.id,
+      deliveryTargets: {
+        inProduct: {
+          title: 'Xero Integration Has Stopped Working',
+          body: 'Your Xero integration encountered an error and has stopped syncing. Please reconnect to avoid any disruptions.',
+        },
+        email: {
+          title: 'Your Xero Sync has stopped working',
+          subject: 'Your Xero Sync has stopped working',
+          header: 'Your Xero Sync has stopped working',
+          body: 'Your Xero integration encountered an error and has stopped syncing. Please reconnect to avoid any disruptions.',
+        },
+      },
+    })
+    notificationPromises.push(copilotBottleneck.schedule(() => promise))
+  }
+
+  await Promise.all(notificationPromises)
+
+  if (e && e instanceof Error) {
+    console.error(
+      'XeroConection.helpers#sendAuthorizationFailedNotification :: Xero authorization failed:',
+      e,
+    )
+  }
 }
