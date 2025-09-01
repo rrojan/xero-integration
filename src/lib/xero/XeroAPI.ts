@@ -2,7 +2,7 @@ import 'server-only'
 
 import { XeroClient } from 'xero-node'
 import env from '@/config/server.env'
-import type { XeroTokenSet } from '@/features/xero-integration/lib/types'
+import type { XeroTokenSet } from '@/lib/xero/types'
 import { getServerUrl } from '@/utils/serverUrl'
 
 class XeroAPI {
