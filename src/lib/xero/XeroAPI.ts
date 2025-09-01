@@ -6,7 +6,7 @@ import type { XeroTokenSet } from '@/lib/xero/types'
 import { getServerUrl } from '@/utils/serverUrl'
 
 class XeroAPI {
-  private xero: XeroClient
+  private readonly xero: XeroClient
 
   constructor() {
     this.xero = new XeroClient({

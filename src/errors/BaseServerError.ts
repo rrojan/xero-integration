@@ -4,7 +4,7 @@
 export class BaseError extends Error {
   constructor(
     message: string,
-    public statusCode: number,
+    public readonly statusCode: number,
   ) {
     super(message)
     this.name = 'BaseServerError'

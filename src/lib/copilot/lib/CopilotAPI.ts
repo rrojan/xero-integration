@@ -29,11 +29,11 @@ import {
 import { withRetry } from '@/lib/copilot/lib/withRetry'
 
 export class CopilotAPI {
-  copilot: SDK
+  readonly copilot: SDK
 
   constructor(
-    private token: string,
-    customApiKey?: string,
+    private readonly token: string,
+    readonly customApiKey?: string,
   ) {
     this.copilot = copilotApi({
       apiKey: customApiKey ?? env.COPILOT_API_KEY,
