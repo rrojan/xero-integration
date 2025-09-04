@@ -1,7 +1,11 @@
+export interface StatusableError extends Error {
+  status: number
+}
+
 /**
  * Base error class for Server components / actions / API routes
  */
-export class BaseError extends Error {
+export class BaseServerError extends Error {
   constructor(
     message: string,
     public readonly statusCode: number,
@@ -11,8 +15,8 @@ export class BaseError extends Error {
   }
 }
 
-export const baseErrorFactory = (name: string, message: string, statusCode: number) => {
-  return class extends BaseError {
+export const baseServerErrorFactory = (name: string, message: string, statusCode: number) => {
+  return class extends BaseServerError {
     constructor(messageOverride?: string) {
       super(messageOverride || message, statusCode)
       this.name = name

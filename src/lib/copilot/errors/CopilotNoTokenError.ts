@@ -1,10 +1,10 @@
 import status from 'http-status'
-import { baseErrorFactory } from '@/errors/BaseServerError'
+import { baseServerErrorFactory } from '@/errors/BaseServerError'
 
 /**
  * Raised when no token is provided for server component / action / API route
  */
-const CopilotNoTokenError = baseErrorFactory(
+const CopilotNoTokenError = baseServerErrorFactory(
   'CopilotNoTokenError',
   'Token is not provided',
   status.BAD_REQUEST,
