@@ -29,15 +29,7 @@ export const withErrorHandler = (handler: RequestHandler): RequestHandler => {
     try {
       return await handler(req, params)
     } catch (error: unknown) {
-      // Log error in a readable way
-      if (error instanceof ZodError) {
-        const formattedError = z.treeifyError(error)
-        console.error('ZodError: ', z.prettifyError(error), '\n', formattedError)
-      } else {
-        console.error(error)
-      }
-
-      // Build error API response
+      // Build error API response and log error
       let status: number = (error as StatusableError).status || httpStatus.INTERNAL_SERVER_ERROR
       let message = 'Something went wrong'
 
@@ -45,12 +37,16 @@ export const withErrorHandler = (handler: RequestHandler): RequestHandler => {
       if (error instanceof ZodError) {
         status = httpStatus.UNPROCESSABLE_ENTITY
         message = z.prettifyError(error)
+        const formattedError = z.treeifyError(error)
+        console.error('ZodError: ', z.prettifyError(error), '\n', formattedError)
       } else if (error instanceof APIError) {
         status = error.status
         message = error.message || message
+        console.error('APIError: ', message)
         console.error(error.error)
       } else if (error instanceof Error && error.message) {
         message = error.message
+        console.error('Error: ', message)
       }
 
       return NextResponse.json({ error: message }, { status })
