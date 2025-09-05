@@ -51,6 +51,23 @@ class XeroAPI {
       throw error
     }
   }
+
+  /**
+   * Sets active tokenset for Xero SDK authorization
+   * @param tokenSet
+   */
+  async setTokenSet(tokenSet: XeroTokenSet) {
+    await this.xero.setTokenSet(tokenSet)
+  }
+
+  /**
+   * Gets the active (most recently connected) tenant (organization) for
+   * @returns Active Tenant's tenantId
+   */
+  async getActiveTenantId(): Promise<string> {
+    const connections = await this.xero.updateTenants(false) // Get an updated set of tenants
+    return connections[0].tenantId
+  }
 }
 
 export default XeroAPI

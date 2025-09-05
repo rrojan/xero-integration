@@ -14,6 +14,26 @@ class AuthService extends BaseService {
     this.connectionsService = new XeroConnectionsService(this.user)
   }
 
+  async handleXeroConnectionCallback(
+    urlParams: Record<string, string | string[] | undefined>,
+  ): Promise<XeroConnection> {
+    let tokenSet: XeroTokenSet, tenantId: string
+    try {
+      const xero = new XeroAPI()
+      tokenSet = await xero.handleApiCallback(urlParams)
+      tenantId = await xero.getActiveTenantId()
+    } catch (error) {
+      console.error(
+        'XeroConnectionsService#handleXeroConnectionCallback :: Error handling Xero callback:',
+        error,
+      )
+      throw new Error('Error handling Xero callback')
+    }
+
+    const xeroConnectionsService = new XeroConnectionsService(this.user)
+    return await xeroConnectionsService.updateConnectionForWorkspace({ tokenSet, tenantId })
+  }
+
   private async handleRefreshFailure(shouldSendEmail: boolean) {
     if (shouldSendEmail) {
       await sendAuthorizationFailedNotification(this.user)
@@ -35,12 +55,13 @@ class AuthService extends BaseService {
         ? connection.tokenSet.expires_at * 1000 > Date.now()
         : false
 
-    // Connection is fresh and valid, nothing to do
+    // --- Handle active connection
     if (!isAccessTokenValid) {
+      // --- Handle inactive connection
       // Update connection as inactive first
-      connection = await this.connectionsService.updateConnection({ status: false })
+      connection = await this.connectionsService.updateConnectionForWorkspace({ status: false })
 
-      // Xero connection not found or unrefreshable. Send a mail prompting IUs to re-authorize
+      // If Xero connection was not found or unrefreshable. Send a mail prompting IUs to re-authorize
       if (!connection.tokenSet || !connection.tokenSet.refresh_token) {
         console.info(
           'XeroConnectionsService#authorizeXeroForCopilotWorkspace :: Unable to refresh Xero access token, no refresh token available',
@@ -52,16 +73,17 @@ class AuthService extends BaseService {
         try {
           const xero = new XeroAPI()
           tokenSet = await xero.refreshWithRefreshToken(connection.tokenSet.refresh_token)
-          return await this.connectionsService.updateConnection({ tokenSet, status: true })
+          return await this.connectionsService.updateConnectionForWorkspace({
+            tokenSet,
+            status: true,
+          })
         } catch (e: unknown) {
           // If unable to refresh, send notification email
           console.error('Error refreshing Xero access token:', e)
           await this.handleRefreshFailure(opts.shouldSendEmail)
         }
       }
-      return connection
     }
-
     return connection
   }
 }
