@@ -1,8 +1,18 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+import type { NextConfig } from 'next'
+
+const nextConfig = {
   // Ngrok tunnel for local dev testing (roj)
   allowedDevOrigins: ['dominant-deadly-narwhal.ngrok-free.app'],
+  // biome-ignore lint/suspicious/useAwait: `headers` needs to be async
+  headers: async () => {
+    // …existing header logic…
+  },
+} satisfies NextConfig
+
+export default nextConfig
   // biome-ignore lint/suspicious/useAwait: `headers` needs to be async
   headers: async () => {
     return [
