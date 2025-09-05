@@ -1,5 +1,5 @@
+import AuthService from '@auth/lib/Auth.service'
 import Script from 'next/script'
-import AuthService from '@/features/auth/lib/Auth.service'
 import User from '@/lib/copilot/models/User.model'
 
 export const dynamic = 'force-dynamic'
