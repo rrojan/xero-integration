@@ -20,9 +20,13 @@ export const xeroConnections = pgTable(
     // Copilot internalUserId that initiated the connection
     initiatedBy: uuid().notNull(),
 
+    // Active Tenant ID (most recently connected Xero organization)
+    tenantId: uuid(),
+
     ...timestamps,
   },
   (table) => [uniqueIndex('uq_xero_connections_portal_id').on(table.portalId)],
 )
 
 export type XeroConnection = InferSelectModel<typeof xeroConnections>
+export type XeroConnectionWithTokenSet = XeroConnection & { tokenSet: XeroTokenSet }

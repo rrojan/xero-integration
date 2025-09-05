@@ -2,79 +2,59 @@ import { eq } from 'drizzle-orm'
 // import { after } from 'next/server'
 import { z } from 'zod'
 import db from '@/db'
-import { xeroConnections } from '@/db/schema/xeroConnections.schema'
-import { sendAuthorizationFailedNotification } from '@/features/auth/lib/XeroConnections.helpers'
-import type User from '@/lib/copilot/models/User.model'
+import { type XeroConnection, xeroConnections } from '@/db/schema/xeroConnections.schema'
+import BaseService from '@/lib/copilot/services/base.service'
 import type { XeroTokenSet } from '@/lib/xero/types'
 import XeroAPI from '@/lib/xero/XeroAPI'
 
-class XeroConnectionsService {
-  constructor(private user: User) {}
-
-  /**
-   * Authorize Xero for a Copilot workspace using a token payload
-   * @param token - Copilot app token
-   */
-  async authorizeXeroForCopilotWorkspace(): Promise<void> {
-    // Find corresponding Xero connection for the workspace
-    const connection = await this.getConnectionForWorkspace()
-
-    // Xero connection not found or inactive. Send a mail prompting IUs to re-authorize
-    if (!connection || !connection.tokenSet || !connection.tokenSet.refresh_token) {
-      // after(() => {
-      sendAuthorizationFailedNotification(this.user)
-      // })
-      return
-    }
-
-    // If access token is expired, attempt to refresh access token via refresh token
-    const isAccessTokenValid = connection.tokenSet.expires_at
-      ? connection.tokenSet.expires_at * 1000 > Date.now()
-      : false
-
-    if (isAccessTokenValid) {
-      return
-    }
-
-    let tokenSet: XeroTokenSet
-    if (!isAccessTokenValid) {
-      try {
-        const xero = new XeroAPI()
-        tokenSet = await xero.refreshWithRefreshToken(connection.tokenSet.refresh_token)
-      } catch (e: unknown) {
-        // after(() => {
-        sendAuthorizationFailedNotification(this.user, e)
-        // })
-        return
-      }
-
-      await this.updateConnection(tokenSet)
-    }
-  }
-
-  async getConnectionForWorkspace() {
-    return await db.query.xeroConnections.findFirst({
+class XeroConnectionsService extends BaseService {
+  async getConnectionForWorkspace(): Promise<XeroConnection> {
+    let connection = await db.query.xeroConnections.findFirst({
       where: eq(xeroConnections.portalId, this.user.portalId),
     })
+
+    if (!connection) {
+      const newConnection = await db
+        .insert(xeroConnections)
+        .values({
+          portalId: z.string().min(1).parse(this.user.portalId),
+          status: false,
+          initiatedBy: z.uuid().parse(this.user.internalUserId),
+        })
+        .returning()
+      connection = newConnection[0]
+    }
+
+    return connection
   }
 
-  async upsertConnection(tokenSet: XeroTokenSet) {
-    await db
+  async upsertConnection({
+    tokenSet,
+    tenantId,
+  }: {
+    tokenSet: XeroTokenSet
+    tenantId: string
+  }): Promise<XeroConnection> {
+    const connections = await db
       .insert(xeroConnections)
       .values({
         portalId: z.string().min(1).parse(this.user.portalId),
-        tokenSet: tokenSet,
+        tokenSet,
+        tenantId,
         status: true,
-        initiatedBy: this.user.internalUserId,
+        initiatedBy: z.uuid().parse(this.user.internalUserId),
       })
       .onConflictDoUpdate({
         target: xeroConnections.portalId,
         set: {
-          tokenSet: tokenSet,
+          tokenSet,
+          tenantId,
           status: true,
           initiatedBy: this.user.internalUserId,
         },
       })
+      .returning()
+    return connections[0]
   }
 
   async updateConnection(tokenSet: XeroTokenSet) {
@@ -82,6 +62,26 @@ class XeroConnectionsService {
       .update(xeroConnections)
       .set({ tokenSet })
       .where(eq(xeroConnections.portalId, this.user.portalId))
+  }
+
+  async handleXeroConnectionCallback(
+    urlParams: Record<string, string | string[] | undefined>,
+  ): Promise<XeroConnection> {
+    let tokenSet: XeroTokenSet, tenantId: string
+    try {
+      const xero = new XeroAPI()
+      tokenSet = await xero.handleApiCallback(urlParams)
+      tenantId = await xero.getActiveTenantId()
+    } catch (error) {
+      console.error(
+        'XeroConnectionsService#handleXeroConnectionCallback :: Error handling Xero callback:',
+        error,
+      )
+      throw new Error('Error handling Xero callback')
+    }
+
+    const xeroConnectionsService = new XeroConnectionsService(this.user)
+    return await xeroConnectionsService.upsertConnection({ tokenSet, tenantId })
   }
 }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRealtimeXeroConnections } from '@/features/auth/hooks/useRealtimeXeroConnections'
+import { useRealtimeXeroConnections } from '@auth/hooks/useRealtimeXeroConnections'
 import type { ClientUser } from '@/lib/copilot/models/ClientUser.model'
 
 interface RealtimeXeroConnectionsProps {

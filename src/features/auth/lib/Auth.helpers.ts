@@ -1,5 +1,6 @@
 import 'server-only'
 
+import z from 'zod'
 import { copilotBottleneck } from '@/lib/copilot/lib/bottleneck'
 import type User from '@/lib/copilot/models/User.model'
 
@@ -10,7 +11,7 @@ export const sendAuthorizationFailedNotification = async (user: User, e?: unknow
 
   for (const internalUser of internalUsers.data) {
     const promise = user.copilot.createNotification({
-      senderId: user.internalUserId,
+      senderId: z.uuid().parse(user.internalUserId),
       senderType: 'internalUser',
       recipientInternalUserId: internalUser.id,
       deliveryTargets: {

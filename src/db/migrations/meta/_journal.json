@@ -15,6 +15,13 @@
       "when": 1756526824251,
       "tag": "20250830040704_add_xero_connections_table",
       "breakpoints": false
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1756985691757,
+      "tag": "20250904113451_add_tenant_id_to_xero_connections",
+      "breakpoints": false
     }
   ]
 }
