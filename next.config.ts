@@ -1,18 +1,8 @@
 import type { NextConfig } from 'next'
 
-const nextConfig: NextConfig = {
-import type { NextConfig } from 'next'
-
 const nextConfig = {
   // Ngrok tunnel for local dev testing (roj)
   allowedDevOrigins: ['dominant-deadly-narwhal.ngrok-free.app'],
-  // biome-ignore lint/suspicious/useAwait: `headers` needs to be async
-  headers: async () => {
-    // …existing header logic…
-  },
-} satisfies NextConfig
-
-export default nextConfig
   // biome-ignore lint/suspicious/useAwait: `headers` needs to be async
   headers: async () => {
     return [
@@ -22,7 +12,7 @@ export default nextConfig
           {
             key: 'Content-Security-Policy',
             value:
-              "frame-ancestors 'self' https://dashboard.copilot.app https://dashboard.copilot-staging.app https://dashboard.copilot-staging.com;",
+              "frame-ancestors 'self' https://dashboard.copilot.app https://dashboard.copilot-staging.app https://dashboard.copilot-staging.com https://dashboard.assembly.com https://*.myassembly.com;",
           },
           {
             key: 'X-Content-Type-Options',
@@ -36,6 +26,6 @@ export default nextConfig
       },
     ]
   },
-}
+} satisfies NextConfig
 
 export default nextConfig
