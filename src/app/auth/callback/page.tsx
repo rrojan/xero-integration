@@ -1,5 +1,5 @@
-import XeroConnectionsService from '@auth/lib/XeroConnections.service'
 import Script from 'next/script'
+import AuthService from '@/features/auth/lib/Auth.service'
 import User from '@/lib/copilot/models/User.model'
 
 export const dynamic = 'force-dynamic'
@@ -14,8 +14,8 @@ const CallbackPage = async ({ searchParams }: CallbackPageProps) => {
   const user = await User.authenticate(sp.state)
   delete sp.state // xero-node sdk doesn't expect state in the url params
 
-  const xeroConnectionsService = new XeroConnectionsService(user)
-  await xeroConnectionsService.handleXeroConnectionCallback(sp)
+  const authService = new AuthService(user)
+  await authService.handleXeroConnectionCallback(sp)
 
   return (
     <div className="py-4 px-2">
