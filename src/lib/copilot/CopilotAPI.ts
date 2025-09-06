@@ -25,8 +25,8 @@ import {
   TokenSchema,
   type WorkspaceResponse,
   WorkspaceResponseSchema,
-} from '@/lib/copilot/lib/types'
-import { withRetry } from '@/lib/copilot/lib/withRetry'
+} from '@/lib/copilot/types'
+import { withRetry } from '@/lib/copilot/withRetry'
 
 export class CopilotAPI {
   readonly copilot: SDK
