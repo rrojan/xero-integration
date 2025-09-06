@@ -1,7 +1,7 @@
 import 'server-only'
 
 import z from 'zod'
-import { copilotBottleneck } from '@/lib/copilot/lib/bottleneck'
+import { copilotBottleneck } from '@/lib/copilot/bottleneck'
 import type User from '@/lib/copilot/models/User.model'
 
 export const sendAuthorizationFailedNotification = async (user: User, e?: unknown) => {
