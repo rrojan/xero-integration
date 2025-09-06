@@ -31,7 +31,11 @@ export const xeroConnections = pgTable(
 
 export const XeroConnectionSchema = createSelectSchema(xeroConnections)
 export type XeroConnection = z.infer<typeof XeroConnectionSchema>
-export type XeroConnectionWithTokenSet = XeroConnection & { tokenSet: XeroTokenSet }
+// Authenticated xero connection (must have valid tokenSet + tenantId)
+export type XeroConnectionWithTokenSet = XeroConnection & {
+  tokenSet: XeroTokenSet
+  tenantId: string
+}
 
 export const XeroConnectionInsertPayloadSchema = createInsertSchema(xeroConnections)
 export type XeroConnectionInsertPayload = z.infer<typeof XeroConnectionInsertPayloadSchema>
