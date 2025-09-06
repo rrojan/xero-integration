@@ -15,7 +15,7 @@ export type CopilotListArgs = {
 
 // Schema for decrypted Copilot tokens
 export const TokenSchema = z.object({
-  internalUserId: z.uuid(),
+  internalUserId: z.uuid().optional(),
   workspaceId: z.string().min(1),
 })
 export type Token = z.infer<typeof TokenSchema>

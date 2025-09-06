@@ -1,12 +1,12 @@
 import { z } from 'zod'
+import { CopilotAPI } from '@/lib/copilot/CopilotAPI'
 import CopilotConnectionError from '@/lib/copilot/errors/CopilotConnectionError'
 import CopilotInvalidTokenError from '@/lib/copilot/errors/CopilotInvalidTokenError'
 import CopilotNoTokenError from '@/lib/copilot/errors/CopilotNoTokenError'
-import { CopilotAPI } from '@/lib/copilot/lib/CopilotAPI'
-import type { Token } from '@/lib/copilot/lib/types'
+import type { Token } from '@/lib/copilot/types'
 
 class User {
-  readonly internalUserId: string
+  readonly internalUserId?: string
   readonly portalId: string
   readonly copilot: CopilotAPI
 
