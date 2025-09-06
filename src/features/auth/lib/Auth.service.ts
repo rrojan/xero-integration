@@ -1,8 +1,9 @@
 import { sendAuthorizationFailedNotification } from '@auth/lib/Auth.helpers'
 import XeroConnectionsService from '@auth/lib/XeroConnections.service'
-import type { XeroConnection } from '@/db/schema/xeroConnections.schema'
+import type { XeroConnection, XeroConnectionWithTokenSet } from '@/db/schema/xeroConnections.schema'
 import type User from '@/lib/copilot/models/User.model'
 import BaseService from '@/lib/copilot/services/base.service'
+import XeroConnectionFailedError from '@/lib/xero/errors/XeroConnectionFailedError'
 import type { XeroTokenSet } from '@/lib/xero/types'
 import XeroAPI from '@/lib/xero/XeroAPI'
 
@@ -31,23 +32,33 @@ class AuthService extends BaseService {
     }
 
     const xeroConnectionsService = new XeroConnectionsService(this.user)
-    return await xeroConnectionsService.updateConnectionForWorkspace({ tokenSet, tenantId })
+    return await xeroConnectionsService.updateConnectionForWorkspace({
+      tokenSet,
+      tenantId,
+      status: true,
+    })
   }
 
-  private async handleRefreshFailure(shouldSendEmail: boolean) {
-    if (shouldSendEmail) {
+  private async handleRefreshFailure(safe: boolean) {
+    if (!safe) {
       await sendAuthorizationFailedNotification(this.user)
+      throw new XeroConnectionFailedError()
     }
   }
 
   /**
    * Authorize Xero for a Copilot workspace using a token payload
    * Ref: https://developer.xero.com/documentation/guides/oauth2/auth-flow/
-   * @param token - Copilot app token
+   * @param opts - `safe` flag is for safe handling of errors. `true` does not trigger an error, `false` does.
    */
+  // Overloads
+  authorizeXeroForCopilotWorkspace(): Promise<XeroConnectionWithTokenSet>
+  authorizeXeroForCopilotWorkspace(safe: true): Promise<XeroConnection>
+  authorizeXeroForCopilotWorkspace(safe: false): Promise<XeroConnectionWithTokenSet>
+  // Method definition
   async authorizeXeroForCopilotWorkspace(
-    opts: { shouldSendEmail: boolean } = { shouldSendEmail: true },
-  ): Promise<XeroConnection> {
+    safe: boolean = false,
+  ): Promise<XeroConnection | XeroConnectionWithTokenSet> {
     // Find corresponding Xero connection for the workspace
     let connection = await this.connectionsService.getConnectionForWorkspace()
     const isAccessTokenValid =
@@ -66,7 +77,7 @@ class AuthService extends BaseService {
         console.info(
           'XeroConnectionsService#authorizeXeroForCopilotWorkspace :: Unable to refresh Xero access token, no refresh token available',
         )
-        await this.handleRefreshFailure(opts.shouldSendEmail)
+        await this.handleRefreshFailure(safe)
       } else {
         // Attempt to refresh access token via refresh token
         let tokenSet: XeroTokenSet
@@ -80,7 +91,7 @@ class AuthService extends BaseService {
         } catch (e: unknown) {
           // If unable to refresh, send notification email
           console.error('Error refreshing Xero access token:', e)
-          await this.handleRefreshFailure(opts.shouldSendEmail)
+          await this.handleRefreshFailure(safe)
         }
       }
     }
