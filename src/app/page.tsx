@@ -14,9 +14,7 @@ const Home = async ({ searchParams }: PageProps) => {
   const user = await User.authenticate(sp.token)
 
   const authService = new AuthService(user)
-  const xeroConection = await authService.authorizeXeroForCopilotWorkspace({
-    shouldSendEmail: false,
-  })
+  const xeroConection = await authService.authorizeXeroForCopilotWorkspace(true)
 
   const clientUser = serializeClientUser(user)
 
