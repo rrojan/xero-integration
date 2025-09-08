@@ -39,3 +39,11 @@ export const WebhookEventSchema = z.object({
   data: InvoiceCreatedEventSchema,
 })
 export type WebhookEvent = z.infer<typeof WebhookEventSchema>
+
+export const ContactCreatePayloadSchema = z.object({
+  name: z.string().min(1).optional(),
+  firstName: z.string().min(1).optional(),
+  lastName: z.string().optional(),
+  emailAddress: z.email(),
+})
+export type ContactCreatePayload = z.infer<typeof ContactCreatePayloadSchema>

@@ -13,7 +13,7 @@ class WebhookService extends AuthenticatedXeroService {
       this.user.portalId,
       this.user.token,
     )
-    console.info('WebhookService#handleEvent :: Received webhook event data', data)
+    console.info('WebhookService#handleEvent :: Received webhook event data', JSON.stringify(data))
 
     const eventHandlerMap = {
       'invoice.created': this.handleInvoiceCreated,
