@@ -48,6 +48,9 @@ export const withErrorHandler = (handler: RequestHandler): RequestHandler => {
       } else if (error instanceof Error && error.message) {
         message = error.message
         console.error('Error:', error)
+      } else {
+        message = 'Something went wrong'
+        console.error(error)
       }
 
       return NextResponse.json({ error: message }, { status })
