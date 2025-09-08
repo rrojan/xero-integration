@@ -1,10 +1,10 @@
 import { sendAuthorizationFailedNotification } from '@auth/lib/Auth.helpers'
 import XeroConnectionsService from '@auth/lib/XeroConnections.service'
+import type { TokenSet } from 'xero-node'
 import type { XeroConnection, XeroConnectionWithTokenSet } from '@/db/schema/xeroConnections.schema'
 import type User from '@/lib/copilot/models/User.model'
 import BaseService from '@/lib/copilot/services/base.service'
 import XeroConnectionFailedError from '@/lib/xero/errors/XeroConnectionFailedError'
-import type { XeroTokenSet } from '@/lib/xero/types'
 import XeroAPI from '@/lib/xero/XeroAPI'
 
 class AuthService extends BaseService {
@@ -18,7 +18,7 @@ class AuthService extends BaseService {
   async handleXeroConnectionCallback(
     urlParams: Record<string, string | string[] | undefined>,
   ): Promise<XeroConnection> {
-    let tokenSet: XeroTokenSet, tenantId: string
+    let tokenSet: TokenSet, tenantId: string
     try {
       const xero = new XeroAPI()
       tokenSet = await xero.handleApiCallback(urlParams)
@@ -80,7 +80,7 @@ class AuthService extends BaseService {
         await this.handleRefreshFailure(safe)
       } else {
         // Attempt to refresh access token via refresh token
-        let tokenSet: XeroTokenSet
+        let tokenSet: TokenSet
         try {
           const xero = new XeroAPI()
           tokenSet = await xero.refreshWithRefreshToken(connection.tokenSet.refresh_token)

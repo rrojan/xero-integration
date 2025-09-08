@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm'
+import type { TokenSet } from 'xero-node'
 import { z } from 'zod'
 import db from '@/db'
 import {
@@ -7,7 +8,6 @@ import {
   xeroConnections,
 } from '@/db/schema/xeroConnections.schema'
 import BaseService from '@/lib/copilot/services/base.service'
-import type { XeroTokenSet } from '@/lib/xero/types'
 import XeroAPI from '@/lib/xero/XeroAPI'
 
 class XeroConnectionsService extends BaseService {
@@ -45,7 +45,7 @@ class XeroConnectionsService extends BaseService {
   async handleXeroConnectionCallback(
     urlParams: Record<string, string | string[] | undefined>,
   ): Promise<XeroConnection> {
-    let tokenSet: XeroTokenSet, tenantId: string
+    let tokenSet: TokenSet, tenantId: string
     try {
       const xero = new XeroAPI()
       tokenSet = await xero.handleApiCallback(urlParams)
