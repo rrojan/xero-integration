@@ -1,8 +1,8 @@
 import { boolean, jsonb, pgTable, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod'
+import type { TokenSet } from 'xero-node'
 import type z from 'zod'
 import { timestamps } from '@/db/db.helpers'
-import type { XeroTokenSet } from '@/lib/xero/types'
 
 export const xeroConnections = pgTable(
   'xero_connections',
@@ -13,7 +13,7 @@ export const xeroConnections = pgTable(
     portalId: varchar({ length: 16 }).notNull(),
 
     // Xero tokenset returned after a successful OAuth connection
-    tokenSet: jsonb().$type<XeroTokenSet>(),
+    tokenSet: jsonb().$type<TokenSet>(),
 
     // Connection status
     status: boolean().notNull().default(false),
@@ -33,7 +33,7 @@ export const XeroConnectionSchema = createSelectSchema(xeroConnections)
 export type XeroConnection = z.infer<typeof XeroConnectionSchema>
 // Authenticated xero connection (must have valid tokenSet + tenantId)
 export type XeroConnectionWithTokenSet = XeroConnection & {
-  tokenSet: XeroTokenSet
+  tokenSet: TokenSet
   tenantId: string
 }
 

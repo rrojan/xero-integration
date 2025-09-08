@@ -1,8 +1,8 @@
 import 'server-only'
 
-import { XeroClient } from 'xero-node'
+import { type TokenSet, XeroClient } from 'xero-node'
 import env from '@/config/server.env'
-import type { XeroTokenSet } from '@/lib/xero/types'
+import type { CreateInvoicePayload } from '@/lib/xero/types'
 import { getServerUrl } from '@/utils/serverUrl'
 
 class XeroAPI {
@@ -28,7 +28,7 @@ class XeroAPI {
   /**
    * Refreshes a Xero access token with a set refresh token
    */
-  async refreshWithRefreshToken(refreshToken: string): Promise<XeroTokenSet> {
+  async refreshWithRefreshToken(refreshToken: string): Promise<TokenSet> {
     return await this.xero.refreshWithRefreshToken(
       env.XERO_CLIENT_ID,
       env.XERO_CLIENT_SECRET,
@@ -56,8 +56,8 @@ class XeroAPI {
    * Sets active tokenset for Xero SDK authorization
    * @param tokenSet
    */
-  async setTokenSet(tokenSet: XeroTokenSet) {
-    await this.xero.setTokenSet(tokenSet)
+  setTokenSet(tokenSet: TokenSet) {
+    this.xero.setTokenSet(tokenSet)
   }
 
   /**
@@ -67,6 +67,12 @@ class XeroAPI {
   async getActiveTenantId(): Promise<string> {
     const connections = await this.xero.updateTenants(false) // Get an updated set of tenants
     return connections[0].tenantId
+  }
+
+  async createInvoice(tenantId: string, invoices: CreateInvoicePayload[]) {
+    // Ref: https://developer.xero.com/documentation/api/accounting/invoices#post-invoices
+    const { body } = await this.xero.accountingApi.createInvoices(tenantId, { invoices }, true)
+    return body
   }
 }
 
