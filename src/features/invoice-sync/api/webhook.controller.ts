@@ -1,7 +1,7 @@
+import AuthService from '@auth/lib/Auth.service'
 import WebhookService from '@invoice-sync/lib/webhook.service'
 import { WebhookEventSchema } from '@invoice-sync/types'
 import { type NextRequest, NextResponse } from 'next/server'
-import AuthService from '@/features/auth/lib/Auth.service'
 import User from '@/lib/copilot/models/User.model'
 
 export const handleCopilotWebhook = async (req: NextRequest) => {
@@ -12,10 +12,14 @@ export const handleCopilotWebhook = async (req: NextRequest) => {
   const connection = await authService.authorizeXeroForCopilotWorkspace()
 
   const reqBody = await req.json()
-  const webhookData = WebhookEventSchema.parse(reqBody)
+  const webhookData = WebhookEventSchema.safeParse(reqBody)
+  if (!webhookData.success) {
+    console.info('Ignoring webhook for ', webhookData.data)
+    return NextResponse.json({ message: 'Ignored webhook call for event' })
+  }
 
   const webhookService = new WebhookService(user, connection)
-  await webhookService.handleEvent(webhookData)
+  await webhookService.handleEvent(webhookData.data)
 
-  return NextResponse.json({ message: 'Webhook received' }, { status: 200 })
+  return NextResponse.json({ message: 'Webhook received' })
 }
