@@ -1,3 +1,5 @@
+import 'server-only'
+
 import type { XeroConnectionWithTokenSet } from '@/db/schema/xeroConnections.schema'
 import type User from '@/lib/copilot/models/User.model'
 import BaseService from '@/lib/copilot/services/base.service'
@@ -12,7 +14,7 @@ class AuthenticatedXeroService extends BaseService {
   ) {
     super(user)
     this.xero = new XeroAPI()
-    this.xero.setTokenSet(connection.tokenSet)
+    this.xero.setTokenSet(this.connection.tokenSet)
   }
 }
 
