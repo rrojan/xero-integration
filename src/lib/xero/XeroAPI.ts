@@ -1,7 +1,10 @@
 import 'server-only'
 
-import { type TokenSet, XeroClient } from 'xero-node'
+import status from 'http-status'
+import { type Contact, type TokenSet, XeroClient } from 'xero-node'
 import env from '@/config/server.env'
+import APIError from '@/errors/APIError'
+import type { ContactCreatePayload } from '@/features/invoice-sync/types'
 import type { CreateInvoicePayload } from '@/lib/xero/types'
 import { getServerUrl } from '@/utils/serverUrl'
 
@@ -69,10 +72,27 @@ class XeroAPI {
     return connections[0].tenantId
   }
 
-  async createInvoice(tenantId: string, invoices: CreateInvoicePayload[]) {
+  async createInvoices(tenantId: string, invoices: CreateInvoicePayload[]) {
     // Ref: https://developer.xero.com/documentation/api/accounting/invoices#post-invoices
     const { body } = await this.xero.accountingApi.createInvoices(tenantId, { invoices }, true)
     return body
+  }
+
+  async getContact(tenantId: string, contactId: string): Promise<Contact | undefined> {
+    const { body } = await this.xero.accountingApi.getContact(tenantId, contactId)
+    return body.contacts?.[0]
+  }
+
+  async createContact(tenantId: string, contact: ContactCreatePayload): Promise<Contact> {
+    const { body } = await this.xero.accountingApi.createContacts(
+      tenantId,
+      { contacts: [contact] },
+      true,
+    )
+    if (!body.contacts?.length)
+      throw new APIError('Unable to create contact', status.INTERNAL_SERVER_ERROR)
+
+    return body.contacts[0]
   }
 }
 
