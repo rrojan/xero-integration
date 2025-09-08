@@ -8,7 +8,7 @@ export const serializeLineItems = (copilotItems: InvoiceCreatedEvent['lineItems'
     const serializedItem: LineItem = {
       description: item.description,
       quantity: item.quantity,
-      unitAmount: item.amount / item.quantity,
+      unitAmount: item.amount,
       // TODO: Implement tax in later ticket
       taxAmount: 0,
       accountCode: AccountCode.SALES,
