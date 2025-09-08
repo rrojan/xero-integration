@@ -33,8 +33,6 @@ export const withErrorHandler = (handler: RequestHandler): RequestHandler => {
       let status: number = (error as StatusableError).status || httpStatus.INTERNAL_SERVER_ERROR
       let message = 'Something went wrong'
 
-      console.error(error)
-
       // Build a proper response based on the type of Error encountered
       if (error instanceof ZodError) {
         status = httpStatus.UNPROCESSABLE_ENTITY
@@ -44,8 +42,12 @@ export const withErrorHandler = (handler: RequestHandler): RequestHandler => {
       } else if (error instanceof APIError) {
         status = error.status
         message = error.message || message
+        if (status !== httpStatus.OK) {
+          console.error('APIError:', error)
+        }
       } else if (error instanceof Error && error.message) {
         message = error.message
+        console.error('Error:', error)
       }
 
       return NextResponse.json({ error: message }, { status })

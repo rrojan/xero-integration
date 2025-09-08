@@ -1,3 +1,5 @@
+import 'server-only'
+
 import status from 'http-status'
 import { baseServerErrorFactory } from '@/errors/BaseServerError'
 

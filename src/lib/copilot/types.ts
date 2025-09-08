@@ -71,8 +71,8 @@ export type CompanyCreateRequest = z.infer<typeof CompanyCreateRequestSchema>
 export const ClientRequestSchema = z.object({
   givenName: z.string(),
   familyName: z.string(),
-  email: z.string().email(),
-  companyId: z.string().uuid().optional(),
+  email: z.email(),
+  companyId: z.uuid().optional(),
 })
 export type ClientRequest = z.infer<typeof ClientRequestSchema>
 
@@ -134,8 +134,8 @@ export type NotificationRequestBody = z.infer<typeof NotificationRequestBodySche
 
 export const NotificationCreatedResponseSchema = z.object({
   id: z.string(),
-  appId: z.string().uuid().optional(),
-  createdAt: z.string().datetime(),
+  appId: z.uuid().optional(),
+  createdAt: z.iso.datetime(),
   event: z.string().optional(),
   object: z.string().optional(),
   companyId: z.string().optional(),
