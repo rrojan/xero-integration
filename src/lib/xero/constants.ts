@@ -3,3 +3,8 @@
 export enum AccountCode {
   SALES = '4000', // This tracks income generated from business operations, like sales revenue
 }
+
+// Ref: https://developer.xero.com/documentation/api/accounting/types#report-tax-types
+export enum ReportTaxType {
+  OUTPUT = 'OUTPUT',
+}
