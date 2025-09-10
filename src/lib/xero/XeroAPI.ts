@@ -1,13 +1,14 @@
 import 'server-only'
 
 import status from 'http-status'
-import { type TokenSet, XeroClient } from 'xero-node'
+import { type TaxRate, type TokenSet, XeroClient } from 'xero-node'
 import z from 'zod'
 import env from '@/config/server.env'
 import APIError from '@/errors/APIError'
-import type { ContactCreatePayload } from '@/features/invoice-sync/types'
+import type { ContactCreatePayload, TaxRateCreatePayload } from '@/features/invoice-sync/types'
 import type { CreateInvoicePayload, ValidContact } from '@/lib/xero/types'
 import { getServerUrl } from '@/utils/serverUrl'
+import { ReportTaxType } from './constants'
 
 class XeroAPI {
   private readonly xero: XeroClient
@@ -111,6 +112,22 @@ class XeroAPI {
       throw new APIError('Unable to update contact', status.INTERNAL_SERVER_ERROR)
 
     return { ...newContact, contactID: z.uuid().parse(newContact.contactID) }
+  }
+
+  async getTaxRates(tenantId: string) {
+    const { body } = await this.xero.accountingApi.getTaxRateByTaxType(
+      tenantId,
+      ReportTaxType.OUTPUT,
+    )
+    return body.taxRates
+  }
+
+  async createTaxRate(tenantId: string, taxRate: TaxRateCreatePayload): Promise<TaxRate> {
+    const { body } = await this.xero.accountingApi.createTaxRates(tenantId, { taxRates: [taxRate] })
+    const newTaxRate = body.taxRates?.[0]
+
+    if (!newTaxRate) throw new APIError('Unable to create taxRate', status.INTERNAL_SERVER_ERROR)
+    return newTaxRate
   }
 }
 
