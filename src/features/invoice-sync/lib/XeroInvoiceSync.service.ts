@@ -13,7 +13,7 @@ class XeroInvoiceSyncService extends AuthenticatedXeroService {
     // Prepare invoid payload fields
     const lineItems = serializeLineItems(data.lineItems)
     const xeroContactService = new XeroContactService(this.user, this.connection)
-    const { contactID } = await xeroContactService.getSyncedXeroContact(data.clientId)
+    const { contactID } = await xeroContactService.getSyncedContact(data.clientId)
 
     const invoice = CreateInvoicePayloadSchema.parse({
       type: Invoice.TypeEnum.ACCREC,

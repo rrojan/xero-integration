@@ -1,11 +1,12 @@
 import 'server-only'
 
 import status from 'http-status'
-import { type Contact, type TokenSet, XeroClient } from 'xero-node'
+import { type TokenSet, XeroClient } from 'xero-node'
+import z from 'zod'
 import env from '@/config/server.env'
 import APIError from '@/errors/APIError'
 import type { ContactCreatePayload } from '@/features/invoice-sync/types'
-import type { CreateInvoicePayload } from '@/lib/xero/types'
+import type { CreateInvoicePayload, ValidContact } from '@/lib/xero/types'
 import { getServerUrl } from '@/utils/serverUrl'
 
 class XeroAPI {
@@ -78,21 +79,38 @@ class XeroAPI {
     return body
   }
 
-  async getContact(tenantId: string, contactId: string): Promise<Contact | undefined> {
+  async getContact(tenantId: string, contactId: string): Promise<ValidContact | undefined> {
     const { body } = await this.xero.accountingApi.getContact(tenantId, contactId)
-    return body.contacts?.[0]
+    const contact = body.contacts?.[0]
+    if (contact) {
+      return { ...contact, contactID: z.uuid().parse(contact.contactID) }
+    }
   }
 
-  async createContact(tenantId: string, contact: ContactCreatePayload): Promise<Contact> {
+  async createContact(tenantId: string, contact: ContactCreatePayload): Promise<ValidContact> {
     const { body } = await this.xero.accountingApi.createContacts(
       tenantId,
       { contacts: [contact] },
       true,
     )
-    if (!body.contacts?.length)
+    const newContact = body.contacts?.[0]
+
+    if (!body.contacts?.length || !newContact)
       throw new APIError('Unable to create contact', status.INTERNAL_SERVER_ERROR)
 
-    return body.contacts[0]
+    return { ...newContact, contactID: z.uuid().parse(newContact.contactID) }
+  }
+
+  async updateContact(tenantId: string, contact: ValidContact): Promise<ValidContact> {
+    const { body } = await this.xero.accountingApi.updateContact(tenantId, contact.contactID, {
+      contacts: [contact],
+    })
+    const newContact = body.contacts?.[0]
+
+    if (!body.contacts?.length || !newContact)
+      throw new APIError('Unable to update contact', status.INTERNAL_SERVER_ERROR)
+
+    return { ...newContact, contactID: z.uuid().parse(newContact.contactID) }
   }
 }
 
