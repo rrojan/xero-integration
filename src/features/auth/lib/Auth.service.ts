@@ -39,9 +39,9 @@ class AuthService extends BaseService {
     })
   }
 
-  private async handleRefreshFailure(safe: boolean) {
+  private async handleRefreshFailure(safe: boolean, connection?: XeroConnection) {
     if (!safe) {
-      await sendAuthorizationFailedNotification(this.user)
+      await sendAuthorizationFailedNotification(this.user, connection)
       throw new XeroConnectionFailedError()
     }
   }
@@ -77,7 +77,7 @@ class AuthService extends BaseService {
         console.info(
           'XeroConnectionsService#authorizeXeroForCopilotWorkspace :: Unable to refresh Xero access token, no refresh token available',
         )
-        await this.handleRefreshFailure(safe)
+        await this.handleRefreshFailure(safe, connection)
       } else {
         // Attempt to refresh access token via refresh token
         let tokenSet: TokenSet
@@ -91,7 +91,7 @@ class AuthService extends BaseService {
         } catch (e: unknown) {
           // If unable to refresh, send notification email
           console.error('Error refreshing Xero access token:', e)
-          await this.handleRefreshFailure(safe)
+          await this.handleRefreshFailure(safe, connection)
         }
       }
     }
