@@ -30,5 +30,5 @@ export const serializeContact = (client: ClientResponse): ContactCreatePayload =
     firstName: client.givenName,
     lastName: client.familyName,
     emailAddress: client.email,
-  })
+  } satisfies ContactCreatePayload)
 }
