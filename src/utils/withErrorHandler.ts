@@ -37,8 +37,7 @@ export const withErrorHandler = (handler: RequestHandler): RequestHandler => {
       if (error instanceof ZodError) {
         status = httpStatus.UNPROCESSABLE_ENTITY
         message = z.prettifyError(error)
-        const formattedError = z.treeifyError(error)
-        console.error('ZodError: ', z.prettifyError(error), '\n', formattedError)
+        console.error('ZodError: ', z.prettifyError(error), '\n', error)
       } else if (error instanceof APIError) {
         status = error.status
         message = error.message || message
