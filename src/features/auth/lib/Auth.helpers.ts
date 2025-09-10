@@ -1,17 +1,23 @@
 import 'server-only'
 
 import z from 'zod'
+import type { XeroConnection } from '@/db/schema/xeroConnections.schema'
 import { copilotBottleneck } from '@/lib/copilot/bottleneck'
 import type User from '@/lib/copilot/models/User.model'
 
-export const sendAuthorizationFailedNotification = async (user: User, e?: unknown) => {
+export const sendAuthorizationFailedNotification = async (
+  user: User,
+  connection?: XeroConnection,
+  e?: unknown,
+) => {
   const internalUsers = await user.copilot.getInternalUsers()
 
   const notificationPromises = []
 
   for (const internalUser of internalUsers.data) {
+    const senderId = z.uuid().parse(user.internalUserId ?? connection?.initiatedBy)
     const promise = user.copilot.createNotification({
-      senderId: z.uuid().parse(user.internalUserId),
+      senderId,
       senderType: 'internalUser',
       recipientInternalUserId: internalUser.id,
       deliveryTargets: {
