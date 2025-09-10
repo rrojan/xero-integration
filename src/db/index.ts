@@ -1,3 +1,5 @@
+import 'server-only'
+
 declare global {
   var _drizzleDb: DB | undefined
 }
