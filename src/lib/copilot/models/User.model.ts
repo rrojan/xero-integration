@@ -6,7 +6,7 @@ import CopilotNoTokenError from '@/lib/copilot/errors/CopilotNoTokenError'
 import type { Token } from '@/lib/copilot/types'
 
 class User {
-  readonly internalUserId?: string
+  internalUserId?: string
   readonly portalId: string
   readonly copilot: CopilotAPI
 

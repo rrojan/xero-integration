@@ -1,4 +1,4 @@
-import { Invoice, LineAmountTypes } from 'xero-node'
+import { type Contact, Invoice, LineAmountTypes } from 'xero-node'
 import z from 'zod'
 import { AccountCode } from '@/lib/xero/constants'
 import type XeroAPI from '@/lib/xero/XeroAPI'
@@ -49,3 +49,5 @@ export const CreateInvoicePayloadSchema = z.object({
   status: z.enum(Invoice.StatusEnum),
 })
 export type CreateInvoicePayload = z.infer<typeof CreateInvoicePayloadSchema>
+
+export type ValidContact = Contact & { contactID: string }

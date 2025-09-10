@@ -5,10 +5,16 @@ import z from 'zod'
 import db from '@/db'
 import { clientContactMappings } from '@/db/schema/clientContactMappings.schema'
 import { CopilotAPI } from '@/lib/copilot/CopilotAPI'
+import type { ClientResponse } from '@/lib/copilot/types'
+import { buildClientName } from '@/lib/copilot/utils'
 import AuthenticatedXeroService from '@/lib/xero/AuthenticatedXero.service'
+import type { ValidContact } from '@/lib/xero/types'
 
 class XeroContactService extends AuthenticatedXeroService {
-  async getSyncedXeroContact(clientId: string): Promise<Contact> {
+  async getSyncedContact(clientId: string): Promise<Contact> {
+    const copilot = new CopilotAPI(this.user.token)
+    const client = await copilot.getClient(clientId)
+
     const syncedContacts = await db
       .select({ contactID: clientContactMappings.contactId })
       .from(clientContactMappings)
@@ -20,10 +26,15 @@ class XeroContactService extends AuthenticatedXeroService {
       )
 
     let contact = syncedContacts[0]
+
     // If contact exists, return it and end method. Else, delete existing contact sync to create a new one.
     if (contact) {
       const xeroContact = await this.xero.getContact(this.connection.tenantId, contact.contactID)
-      if (xeroContact) return xeroContact
+      if (xeroContact) {
+        await this.validateXeroContact(xeroContact, client)
+        return xeroContact
+      }
+
       await db
         .delete(clientContactMappings)
         .where(
@@ -36,24 +47,44 @@ class XeroContactService extends AuthenticatedXeroService {
     console.info(
       `XeroContactService#getSyncedXeroContact :: Couldn't find existing client... creating a new one for ${clientId}`,
     )
-    contact = await this.createXeroContact(clientId)
+    contact = await this.createContact(client)
     return contact
   }
 
-  async createXeroContact(clientId: string): Promise<Contact & { contactID: string }> {
-    const copilot = new CopilotAPI(this.user.token)
-    const client = await copilot.getClient(clientId)
+  async createContact(client: ClientResponse): Promise<Contact & { contactID: string }> {
     const contactPayload = serializeContact(client)
     const contact = await this.xero.createContact(this.connection.tenantId, contactPayload)
     await db.insert(clientContactMappings).values({
       portalId: this.user.portalId,
-      clientId,
+      clientId: client.id,
       contactId: z.string().parse(contact.contactID),
       tenantId: this.connection.tenantId,
     })
     return {
       ...contact,
       contactID: z.string().parse(contact.contactID),
+    }
+  }
+
+  /**
+   * Makes sure that client information between Xero and Copilot is the same
+   * @param contact
+   * @param client
+   */
+  async validateXeroContact(contact: ValidContact, client: ClientResponse) {
+    if (
+      contact.name !== buildClientName(client) ||
+      contact.firstName !== client.givenName ||
+      contact.lastName !== client.familyName ||
+      contact.emailAddress !== client.email
+    ) {
+      await this.xero.updateContact(this.connection.tenantId, {
+        ...contact,
+        name: buildClientName(client),
+        firstName: client.givenName,
+        lastName: client.familyName,
+        emailAddress: client.email,
+      })
     }
   }
 }
