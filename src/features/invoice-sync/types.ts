@@ -1,5 +1,5 @@
+import { TaxRate } from 'xero-node'
 import z from 'zod'
-import { ReportTaxType } from '@/lib/xero/constants'
 
 export const WebhookTokenSchema = z.object({
   workspaceId: z.string().min(1),
@@ -50,6 +50,7 @@ export const ContactCreatePayloadSchema = z.object({
 export type ContactCreatePayload = z.infer<typeof ContactCreatePayloadSchema>
 
 export const TaxRateCreatePayloadSchema = z.object({
+  name: z.string(),
   taxComponents: z.array(
     z.object({
       name: z.string(),
@@ -58,7 +59,7 @@ export const TaxRateCreatePayloadSchema = z.object({
       isNonRecoverable: z.boolean(),
     }),
   ),
-  taxType: z.enum(ReportTaxType),
-  name: z.string(),
+  reportTaxType: z.enum(TaxRate.ReportTaxTypeEnum).optional(),
+  status: z.enum(TaxRate.StatusEnum),
 })
 export type TaxRateCreatePayload = z.infer<typeof TaxRateCreatePayloadSchema>

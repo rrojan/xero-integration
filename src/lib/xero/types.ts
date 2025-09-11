@@ -1,4 +1,4 @@
-import { type Contact, Invoice, LineAmountTypes } from 'xero-node'
+import { type Contact, Invoice } from 'xero-node'
 import z from 'zod'
 import { AccountCode } from '@/lib/xero/constants'
 import type XeroAPI from '@/lib/xero/XeroAPI'
@@ -19,6 +19,7 @@ export const LineItemSchema = z.object({
   quantity: z.number().min(1).positive(),
   unitAmount: z.number().positive(),
   taxAmount: z.number().nonnegative(),
+  taxType: z.string().optional(),
   // Unique code to identify Xero item
   // Ref:
   accountCode: z.enum(AccountCode),
@@ -41,8 +42,8 @@ export const CreateInvoicePayloadSchema = z.object({
   date: z.iso.date(),
   // Date invoice is due – YYYY-MM-DD
   dueDate: z.iso.date(),
-  // Line amounts are exclusive of tax by default if you don’t specify this
-  lineAmountTypes: z.enum(LineAmountTypes),
+  // Line amounts are exclusive of tax by default if you don’t specify this. Not needed
+  // lineAmountTypes: z.enum(LineAmountTypes),
   // Line items
   lineItems: z.array(LineItemSchema),
   // Status (See enum)

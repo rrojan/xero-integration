@@ -90,7 +90,7 @@ class AuthService extends BaseService {
           })
         } catch (e: unknown) {
           // If unable to refresh, send notification email
-          console.error('Error refreshing Xero access token:', e)
+          console.error('Error refreshing Xero access token:', JSON.stringify(e))
           await this.handleRefreshFailure(safe, connection)
         }
       }

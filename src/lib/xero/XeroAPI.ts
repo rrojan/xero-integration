@@ -8,7 +8,6 @@ import APIError from '@/errors/APIError'
 import type { ContactCreatePayload, TaxRateCreatePayload } from '@/features/invoice-sync/types'
 import type { CreateInvoicePayload, ValidContact } from '@/lib/xero/types'
 import { getServerUrl } from '@/utils/serverUrl'
-import { ReportTaxType } from './constants'
 
 class XeroAPI {
   private readonly xero: XeroClient
@@ -115,10 +114,7 @@ class XeroAPI {
   }
 
   async getTaxRates(tenantId: string) {
-    const { body } = await this.xero.accountingApi.getTaxRateByTaxType(
-      tenantId,
-      ReportTaxType.OUTPUT,
-    )
+    const { body } = await this.xero.accountingApi.getTaxRates(tenantId)
     return body.taxRates
   }
 
