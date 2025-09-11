@@ -18,7 +18,10 @@ export const serializeLineItems = (
       description: item.description,
       quantity: item.quantity,
       unitAmount: item.amount / 100,
-      taxAmount: typeof taxRate?.effectiveRate === 'number' ? taxRate.effectiveRate : 0,
+      taxAmount:
+        typeof taxRate?.effectiveRate === 'number'
+          ? ((taxRate.effectiveRate / 100) * item.amount) / 100
+          : 0,
       taxType: taxRate?.taxType,
       accountCode: AccountCode.SALES,
     } satisfies XeroLineItem)
