@@ -33,8 +33,8 @@
     {
       "idx": 4,
       "version": "7",
-      "when": 1757665080171,
-      "tag": "20250912081800_add_synced_invoices_table",
+      "when": 1757671313557,
+      "tag": "20250912100153_add_synced_invoices_table",
       "breakpoints": false
     }
   ]
