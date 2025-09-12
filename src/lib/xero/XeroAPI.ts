@@ -1,7 +1,7 @@
 import 'server-only'
 
 import status from 'http-status'
-import { type TaxRate, type TokenSet, XeroClient } from 'xero-node'
+import { type Invoice, type TaxRate, type TokenSet, XeroClient } from 'xero-node'
 import z from 'zod'
 import env from '@/config/server.env'
 import APIError from '@/errors/APIError'
@@ -73,10 +73,17 @@ class XeroAPI {
     return connections[0].tenantId
   }
 
-  async createInvoices(tenantId: string, invoices: CreateInvoicePayload[]) {
+  async createInvoice(
+    tenantId: string,
+    invoice: CreateInvoicePayload,
+  ): Promise<Invoice | undefined> {
     // Ref: https://developer.xero.com/documentation/api/accounting/invoices#post-invoices
-    const { body } = await this.xero.accountingApi.createInvoices(tenantId, { invoices }, true)
-    return body
+    const { body } = await this.xero.accountingApi.createInvoices(
+      tenantId,
+      { invoices: [invoice] },
+      true,
+    )
+    return body.invoices?.[0]
   }
 
   async getContact(tenantId: string, contactId: string): Promise<ValidContact | undefined> {
@@ -95,8 +102,7 @@ class XeroAPI {
     )
     const newContact = body.contacts?.[0]
 
-    if (!body.contacts?.length || !newContact)
-      throw new APIError('Unable to create contact', status.INTERNAL_SERVER_ERROR)
+    if (!newContact) throw new APIError('Unable to create contact', status.INTERNAL_SERVER_ERROR)
 
     return { ...newContact, contactID: z.uuid().parse(newContact.contactID) }
   }
@@ -107,8 +113,7 @@ class XeroAPI {
     })
     const newContact = body.contacts?.[0]
 
-    if (!body.contacts?.length || !newContact)
-      throw new APIError('Unable to update contact', status.INTERNAL_SERVER_ERROR)
+    if (!newContact) throw new APIError('Unable to update contact', status.INTERNAL_SERVER_ERROR)
 
     return { ...newContact, contactID: z.uuid().parse(newContact.contactID) }
   }
