@@ -20,22 +20,9 @@ const Home = async ({ searchParams }: PageProps) => {
 
   return (
     <AppStateContextProvider user={clientUser} connectionStatus={!!xeroConection.status}>
-      <main className="pt-6 px-8 sm:px-[100px] lg:px-[220px] pb-[54px]">
+      <main className="pt-6 px-8 sm:px-[100px] lg:px-[220px] pb-[54px] min-h-[100vh]">
         <RealtimeXeroConnections user={clientUser} />
-        <CalloutSection />
-        <form
-          action={async () => {
-            'use server'
-            // Dummy action to test re-authorization flow
-            const user = await User.authenticate((await searchParams).token as string) // capture only the string
-            const authService = new AuthService(user)
-            await authService.authorizeXeroForCopilotWorkspace()
-          }}
-        >
-          <button className="border border-gray-200 px-4 py-1 mt-4 rounded-sm" type="submit">
-            Check authorization
-          </button>
-        </form>
+        {!xeroConection.status ? <CalloutSection /> : <div>Connected!</div>}
       </main>
     </AppStateContextProvider>
   )

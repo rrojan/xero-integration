@@ -12,8 +12,8 @@ importers:
         specifier: ^2.19.5
         version: 2.19.5
       copilot-design-system:
-        specifier: ^2.2.0
-        version: 2.2.0(@types/react-dom@19.1.7(@types/react@19.1.11))(@types/react@19.1.11)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.2)
+        specifier: ^2.2.3
+        version: 2.2.3(@types/react-dom@19.1.7(@types/react@19.1.11))(@types/react@19.1.11)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.2)
       copilot-node-sdk:
         specifier: ^3.16.0
         version: 3.16.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1376,8 +1376,8 @@ packages:
   convert-source-map@1.9.0:
     resolution: {integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==}
 
-  copilot-design-system@2.2.0:
-    resolution: {integrity: sha512-fJJiN9Qy68B24PdSKCa6WfBgasZxRHDVhK2ZykNUZaxW8hPRCPZtj95m1PN7SMPaIm2Ye71mSv8gEne6IsM9+g==}
+  copilot-design-system@2.2.3:
+    resolution: {integrity: sha512-F/oPHLIVqwPQ6wtuufPHGUf9u3jlPgd0JtuCEQj23JgHFN9u7X0afB92+bGbi3t31WLo5rkzzPmuDpEthD31Zg==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
@@ -3552,7 +3552,7 @@ snapshots:
 
   convert-source-map@1.9.0: {}
 
-  copilot-design-system@2.2.0(@types/react-dom@19.1.7(@types/react@19.1.11))(@types/react@19.1.11)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.2):
+  copilot-design-system@2.2.3(@types/react-dom@19.1.7(@types/react@19.1.11))(@types/react@19.1.11)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.2):
     dependencies:
       '@radix-ui/react-avatar': 1.1.10(@types/react-dom@19.1.7(@types/react@19.1.11))(@types/react@19.1.11)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@radix-ui/react-toast': 1.2.15(@types/react-dom@19.1.7(@types/react@19.1.11))(@types/react@19.1.11)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
