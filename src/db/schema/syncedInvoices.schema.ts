@@ -3,7 +3,11 @@ import { createInsertSchema } from 'drizzle-zod'
 import type z from 'zod'
 import { timestamps } from '@/db/db.helpers'
 
-export const syncedInvoiceStatusEnum = pgEnum('status', ['pending', 'failed', 'success'])
+export const syncedInvoiceStatusEnum = pgEnum('synced_invoices_status', [
+  'pending',
+  'failed',
+  'success',
+])
 
 export const syncedInvoices = pgTable(
   'synced_invoices',

@@ -1,5 +1,5 @@
 {
-  "id": "aad02d7d-b7d9-4c0c-afb9-01038042e730",
+  "id": "1998a1f6-c534-4703-9be7-b76a58128af4",
   "prevId": "7ba10339-515c-412d-8c99-0285085f1f61",
   "version": "7",
   "dialect": "postgresql",
@@ -115,7 +115,7 @@
         },
         "status": {
           "name": "status",
-          "type": "status",
+          "type": "synced_invoices_status",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
@@ -255,8 +255,8 @@
     }
   },
   "enums": {
-    "public.status": {
-      "name": "status",
+    "public.synced_invoices_status": {
+      "name": "synced_invoices_status",
       "schema": "public",
       "values": ["pending", "failed", "success"]
     }
