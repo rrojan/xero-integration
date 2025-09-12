@@ -19,7 +19,7 @@ export const handleCopilotWebhook = async (req: NextRequest) => {
   }
 
   const webhookService = new WebhookService(user, connection)
-  await webhookService.handleEvent(webhookData.data)
+  const data = await webhookService.handleEvent(webhookData.data)
 
-  return NextResponse.json({ message: 'Webhook received' })
+  return NextResponse.json({ message: 'Webhook received', data })
 }
