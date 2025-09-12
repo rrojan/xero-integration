@@ -4,7 +4,7 @@ class APIError extends BaseServerError {
   constructor(
     message: string,
     public readonly status: number = 500,
-    public readonly error?: unknown[],
+    public readonly error?: unknown,
   ) {
     super(message, status)
     this.name = 'APIError'
