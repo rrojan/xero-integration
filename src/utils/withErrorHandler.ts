@@ -42,7 +42,7 @@ export const withErrorHandler = (handler: RequestHandler): RequestHandler => {
         status = error.status
         message = error.message || message
         if (status !== httpStatus.OK) {
-          console.error('APIError:', error)
+          console.error('APIError:', error.error || error.message)
         }
       } else if (error instanceof Error && error.message) {
         message = error.message
