@@ -5,9 +5,11 @@ import XeroContactService from '@invoice-sync/lib/XeroContact.service'
 import XeroTaxService from '@invoice-sync/lib/XeroTax.service'
 import type { InvoiceCreatedEvent } from '@invoice-sync/types'
 import { and, eq } from 'drizzle-orm'
+import status from 'http-status'
 import { Invoice } from 'xero-node'
 import db from '@/db'
 import { type SyncedInvoiceCreatePayload, syncedInvoices } from '@/db/schema/syncedInvoices.schema'
+import APIError from '@/errors/APIError'
 import AuthenticatedXeroService from '@/lib/xero/AuthenticatedXero.service'
 import {
   CreateInvoicePayloadSchema,
@@ -52,12 +54,17 @@ class XeroInvoiceSyncService extends AuthenticatedXeroService {
     }
 
     // Create and save invoice status
-    const syncedInvoice = await this.xero.createInvoice(this.connection.tenantId, invoice)
-    syncedInvoiceRecord = await this.updateInvoiceRecord(
-      data,
-      syncedInvoice,
-      syncedInvoice ? 'success' : 'failed',
-    )
+    try {
+      const syncedInvoice = await this.xero.createInvoice(this.connection.tenantId, invoice)
+      syncedInvoiceRecord = await this.updateInvoiceRecord(
+        data,
+        syncedInvoice,
+        syncedInvoice ? 'success' : 'failed',
+      )
+    } catch (e: unknown) {
+      syncedInvoiceRecord = await this.updateInvoiceRecord(data, undefined, 'failed')
+      throw new APIError('Failed to store synced invoice record', status.INTERNAL_SERVER_ERROR, e)
+    }
 
     console.info(
       `XeroInvoiceSyncService#syncInvoiceToXero :: Synced Copilot invoice ${syncedInvoiceRecord.copilotInvoiceId} to Xero invoice ${syncedInvoiceRecord.xeroInvoiceId} for portalId ${this.connection.portalId}`,
