@@ -37,7 +37,14 @@
       },
       "nursery": {
         "noFloatingPromises": "error",
-        "useSortedClasses": "error"
+        "useSortedClasses": {
+          "fix": "safe",
+          "level": "warn",
+          "options": {
+            "attributes": ["class", "className"],
+            "functions": ["clsx", "cva", "tw", "twMerge", "cn", "twJoin"]
+          }
+        }
       }
     },
     "domains": {
