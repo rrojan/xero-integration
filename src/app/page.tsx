@@ -22,7 +22,7 @@ const Home = async ({ searchParams }: PageProps) => {
     <AppStateContextProvider user={clientUser} connectionStatus={!!xeroConection.status}>
       <main className="pt-6 px-8 sm:px-[100px] lg:px-[220px] pb-[54px] min-h-[100vh]">
         <RealtimeXeroConnections user={clientUser} />
-        {!xeroConection.status ? <CalloutSection /> : <div>Connected!</div>}
+        {!xeroConection.status ? <CalloutSection /> : <div className="text-2xl">Connected!</div>}
       </main>
     </AppStateContextProvider>
   )
