@@ -1,5 +1,9 @@
-export const calculateTaxAmount = (itemAmount: number, quantity: number, taxRate: unknown) => {
+export const calculateTaxAmount = (
+  itemAmount: number,
+  quantity: number,
+  taxRate: unknown,
+): number => {
   return typeof taxRate === 'number'
-    ? Number(((taxRate / 100) * (itemAmount / 100) * quantity).toFixed(2))
+    ? Number((((itemAmount * quantity) / 100) * (taxRate / 100)).toFixed(2))
     : 0
 }
