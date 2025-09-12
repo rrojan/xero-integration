@@ -14,7 +14,7 @@ export default function ClientErrorBoundary({
 
   return (
     <main>
-      <div className="flex flex-col justify-center items-center pb-4 pt-52">
+      <div className="flex flex-col items-center justify-center pt-52 pb-4">
         <p className="mb-2 [&>a:hover]:underline [&>a]:block">
           <Linkify
             componentDecorator={(decoratedHref, decoratedText, key) => (

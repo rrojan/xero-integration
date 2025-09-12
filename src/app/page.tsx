@@ -20,7 +20,7 @@ const Home = async ({ searchParams }: PageProps) => {
 
   return (
     <AppStateContextProvider user={clientUser} connectionStatus={!!xeroConection.status}>
-      <main className="pt-6 px-8 sm:px-[100px] lg:px-[220px] pb-[54px] h-full">
+      <main className="min-h-[100vh] px-8 pt-6 pb-[54px] sm:px-[100px] lg:px-[220px]">
         <RealtimeXeroConnections user={clientUser} />
         <CalloutSection />
       </main>
