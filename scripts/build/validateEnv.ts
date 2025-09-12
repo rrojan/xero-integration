@@ -22,6 +22,7 @@ const validateEnv = async () => {
   }
 }
 
+// biome-ignore lint/nursery/noFloatingPromises: This won't affect script's execution
 ;(async () => {
   console.info('\n🔍 Validating environment variables...')
   await validateEnv()
