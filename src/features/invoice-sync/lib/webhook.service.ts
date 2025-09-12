@@ -18,7 +18,8 @@ class WebhookService extends AuthenticatedXeroService {
     const eventHandlerMap = {
       'invoice.created': this.handleInvoiceCreated,
     }
-    await eventHandlerMap[data.eventType](data.data)
+    const handler = eventHandlerMap[data.eventType]
+    return await handler(data.data)
   }
 
   private handleInvoiceCreated = async (eventData: WebhookEvent['data']) => {
@@ -29,7 +30,7 @@ class WebhookService extends AuthenticatedXeroService {
     }
 
     const xeroInvoiceSyncService = new XeroInvoiceSyncService(this.user, this.connection)
-    await xeroInvoiceSyncService.syncInvoiceToXero(data)
+    return await xeroInvoiceSyncService.syncInvoiceToXero(data)
   }
 }
 
