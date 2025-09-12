@@ -1,3 +1,4 @@
+import { calculateTaxAmount } from '@invoice-sync/lib/utils'
 import {
   type ContactCreatePayload,
   ContactCreatePayloadSchema,
@@ -18,10 +19,7 @@ export const serializeLineItems = (
       description: item.description,
       quantity: item.quantity,
       unitAmount: item.amount / 100,
-      taxAmount:
-        typeof taxRate?.effectiveRate === 'number'
-          ? ((taxRate.effectiveRate / 100) * item.amount) / 100
-          : 0,
+      taxAmount: calculateTaxAmount(item.amount, item.quantity, taxRate?.effectiveRate),
       taxType: taxRate?.taxType,
       accountCode: AccountCode.SALES,
     } satisfies XeroLineItem)

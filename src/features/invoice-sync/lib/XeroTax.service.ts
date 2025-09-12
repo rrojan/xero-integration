@@ -1,11 +1,12 @@
+import { type TaxRateCreatePayload, TaxRateCreatePayloadSchema } from '@invoice-sync/types'
 import { type TaxComponent, TaxRate } from 'xero-node'
 import AuthenticatedXeroService from '@/lib/xero/AuthenticatedXero.service'
-import { type TaxRateCreatePayload, TaxRateCreatePayloadSchema } from '../types'
+import { areNumbersEqual } from '@/utils/number'
 
 class XeroTaxService extends AuthenticatedXeroService {
   async getTaxRateForItem(effectiveRate: number) {
     const taxRates = await this.xero.getTaxRates(this.connection.tenantId)
-    let matchingTaxRate = taxRates?.find((t) => t.effectiveRate === effectiveRate)
+    let matchingTaxRate = taxRates?.find((t) => areNumbersEqual(t.effectiveRate, effectiveRate))
 
     if (!matchingTaxRate) {
       console.info('XeroTaxService#getTaxRateForItem :: Tax Rate not found... creating a new one')
