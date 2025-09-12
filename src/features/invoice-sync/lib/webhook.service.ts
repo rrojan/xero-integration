@@ -15,7 +15,10 @@ class WebhookService extends AuthenticatedXeroService {
     )
     console.info('WebhookService#handleEvent :: Received webhook event data', JSON.stringify(data))
 
-    const eventHandlerMap = {
+    const eventHandlerMap: Record<
+      WebhookEvent['eventType'],
+      (eventData: WebhookEvent['data']) => object
+    > = {
       'invoice.created': this.handleInvoiceCreated,
     }
     const handler = eventHandlerMap[data.eventType]
