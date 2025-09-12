@@ -16,7 +16,11 @@ import {
 import { datetimeToDate } from '@/utils/date'
 
 class XeroInvoiceSyncService extends AuthenticatedXeroService {
-  async syncInvoiceToXero(data: InvoiceCreatedEvent) {
+  async syncInvoiceToXero(data: InvoiceCreatedEvent): Promise<{
+    copilotInvoiceId: string
+    xeroInvoiceId: string | null
+    status: SyncedInvoiceCreatePayload['status']
+  }> {
     // Prepare invoid payload fields
     const xeroTaxService = new XeroTaxService(this.user, this.connection)
     const taxRate = data.taxAmount
@@ -44,6 +48,7 @@ class XeroInvoiceSyncService extends AuthenticatedXeroService {
       console.info(
         `XeroInvoiceSyncService#syncInvoiceToXero :: Ignoring ${syncedInvoiceRecord.status} sync`,
       )
+      return syncedInvoiceRecord
     }
 
     // Create and save invoice status
