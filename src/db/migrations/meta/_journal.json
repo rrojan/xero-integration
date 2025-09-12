@@ -29,6 +29,13 @@
       "when": 1757337530729,
       "tag": "20250908131850_add_client_contact_mappings_table",
       "breakpoints": false
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1757665080171,
+      "tag": "20250912081800_add_synced_invoices_table",
+      "breakpoints": false
     }
   ]
 }
