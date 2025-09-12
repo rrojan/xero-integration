@@ -36,7 +36,8 @@
         "useAwait": "error"
       },
       "nursery": {
-        "noFloatingPromises": "error"
+        "noFloatingPromises": "error",
+        "useSortedClasses": "error"
       }
     },
     "domains": {
